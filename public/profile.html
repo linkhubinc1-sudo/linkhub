@@ -18,7 +18,7 @@
       <!-- Links loaded dynamically -->
     </div>
 
-    <p class="profile-branding">
+    <p class="profile-branding" id="branding">
       <a href="/">Made with LinkHub</a>
     </p>
   </div>
@@ -43,6 +43,11 @@
         // Apply theme
         if (user.theme && user.theme !== 'default') {
           document.body.classList.add(`theme-${user.theme}`);
+        }
+
+        // Hide branding for Pro users
+        if (user.isPro) {
+          document.getElementById('branding').style.display = 'none';
         }
 
         // Update profile info

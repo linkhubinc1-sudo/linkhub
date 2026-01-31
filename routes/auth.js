@@ -108,14 +108,24 @@ router.post('/logout', (req, res) => {
 // Get current user
 router.get('/me', authenticateToken, (req, res) => {
   const user = db.prepare(
-    'SELECT id, username, email, display_name, bio, avatar_url, theme, created_at FROM users WHERE id = ?'
+    'SELECT id, username, email, display_name, bio, avatar_url, theme, plan, plan_expires_at, created_at FROM users WHERE id = ?'
   ).get(req.user.id);
 
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }
 
-  res.json({ user });
+  // Check if Pro is still valid
+  const isPro = user.plan === 'pro' &&
+    (!user.plan_expires_at || new Date(user.plan_expires_at) > new Date());
+
+  res.json({
+    user: {
+      ...user,
+      isPro,
+      plan: isPro ? 'pro' : 'free'
+    }
+  });
 });
 
 // Update profile

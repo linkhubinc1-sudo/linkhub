@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing - LinkHub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .pricing-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .pricing-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .pricing-header p {
+      color: var(--text-muted);
+      font-size: 1.125rem;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border-radius: 1rem;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--primary);
+      position: relative;
+    }
+
+    .pricing-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient);
+      padding: 0.25rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .plan-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-price {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .plan-description {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin-bottom: 2rem;
+      flex: 1;
+    }
+
+    .plan-features li {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .plan-features li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .plan-features li.disabled {
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    .plan-features li.disabled::before {
+      content: '✗';
+      color: var(--text-muted);
+    }
+
+    .faq {
+      margin-top: 4rem;
+    }
+
+    .faq h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .faq-item h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-item p {
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="logo">LinkHub</a>
+    <div class="nav-links">
+      <a href="/login" class="btn btn-secondary btn-small">Log In</a>
+      <a href="/register" class="btn btn-primary btn-small">Sign Up Free</a>
+    </div>
+  </nav>
+
+  <div class="pricing-container">
+    <div class="pricing-header">
+      <h1>Simple, Transparent Pricing</h1>
+      <p>Start free, upgrade when you're ready to grow</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free Plan -->
+      <div class="pricing-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0 <span>/forever</span></div>
+        <p class="plan-description">Perfect for getting started</p>
+
+        <ul class="plan-features">
+          <li>Unlimited links</li>
+          <li>Basic analytics</li>
+          <li>5 color themes</li>
+          <li>Mobile-responsive page</li>
+          <li class="disabled">Custom domain</li>
+          <li class="disabled">Remove LinkHub branding</li>
+          <li class="disabled">Priority support</li>
+        </ul>
+
+        <a href="/register" class="btn btn-secondary">Get Started Free</a>
+      </div>
+
+      <!-- Pro Plan -->
+      <div class="pricing-card featured">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$5 <span>/month</span></div>
+        <p class="plan-description">For creators who want more</p>
+
+        <ul class="plan-features">
+          <li>Everything in Free</li>
+          <li>Custom domain support</li>
+          <li>Remove LinkHub branding</li>
+          <li>Advanced analytics</li>
+          <li>20+ premium themes</li>
+          <li>Social media embeds</li>
+          <li>Priority support</li>
+        </ul>
+
+        <button class="btn btn-primary" onclick="upgradeToPro('monthly')">Upgrade to Pro</button>
+        <p style="text-align: center; margin-top: 0.75rem; color: var(--text-muted); font-size: 0.875rem;">
+          or <a href="#" onclick="upgradeToPro('yearly'); return false;">$48/year (save 20%)</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="faq">
+      <h2>Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>Can I cancel anytime?</h3>
+        <p>Yes! You can cancel your subscription at any time. You'll keep Pro features until the end of your billing period.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do custom domains work?</h3>
+        <p>Pro users can connect their own domain (like links.yourbrand.com) to their LinkHub page. We provide simple instructions to set it up.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What payment methods do you accept?</h3>
+        <p>We accept all major credit cards through Stripe. Your payment info is never stored on our servers.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Is there a refund policy?</h3>
+        <p>Yes, we offer a 14-day money-back guarantee. If you're not happy, just email us and we'll refund you.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function upgradeToPro(priceType) {
+      // Check if logged in first
+      try {
+        const authRes = await fetch('/api/auth/me');
+        if (!authRes.ok) {
+          window.location.href = '/register?upgrade=true';
+          return;
+        }
+
+        const res = await fetch('/api/billing/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ priceType })
+        });
+
+        const data = await res.json();
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else if (data.error) {
+          alert(data.error);
+        }
+      } catch (err) {
+        alert('Something went wrong. Please try again.');
+      }
+    }
+  </script>
+</body>
+</html>

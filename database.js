@@ -17,6 +17,10 @@ db.exec(`
     bio TEXT,
     avatar_url TEXT,
     theme TEXT DEFAULT 'default',
+    plan TEXT DEFAULT 'free',
+    stripe_customer_id TEXT,
+    stripe_subscription_id TEXT,
+    plan_expires_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 

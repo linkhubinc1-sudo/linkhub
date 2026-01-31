@@ -27,8 +27,66 @@ async function checkAuth() {
     document.getElementById('bio').value = currentUser.bio || '';
     document.getElementById('avatarUrl').value = currentUser.avatar_url || '';
     document.getElementById('theme').value = currentUser.theme || 'default';
+
+    // Update plan UI
+    updatePlanUI();
+
+    // Check for upgrade success
+    if (window.location.search.includes('upgraded=true')) {
+      showToast('Welcome to Pro! Enjoy your new features.', 'success');
+      window.history.replaceState({}, '', '/dashboard');
+    }
   } catch (err) {
     window.location.href = '/login';
+  }
+}
+
+// Update plan UI based on user's subscription
+function updatePlanUI() {
+  const planText = document.getElementById('planText');
+  const upgradeLink = document.getElementById('upgradeLink');
+  const manageBillingLink = document.getElementById('manageBillingLink');
+  const themeHint = document.getElementById('themeHint');
+  const proThemeOptions = document.querySelectorAll('#theme option[data-pro]');
+
+  if (currentUser.isPro) {
+    // Pro user
+    planText.textContent = 'Pro Plan';
+    planText.style.color = 'var(--success)';
+    upgradeLink.style.display = 'none';
+    manageBillingLink.style.display = 'block';
+    themeHint.style.display = 'none';
+
+    // Enable pro themes
+    proThemeOptions.forEach(opt => {
+      opt.disabled = false;
+    });
+
+    // Setup manage billing link
+    manageBillingLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        const res = await fetch('/api/billing/portal', { method: 'POST' });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        }
+      } catch (err) {
+        showToast('Failed to open billing portal', 'error');
+      }
+    });
+  } else {
+    // Free user
+    planText.textContent = 'Free Plan';
+    upgradeLink.style.display = 'block';
+    manageBillingLink.style.display = 'none';
+    themeHint.style.display = 'block';
+
+    // Disable pro themes
+    proThemeOptions.forEach(opt => {
+      opt.disabled = true;
+      opt.textContent = opt.textContent.replace(' (Pro)', '') + ' (Pro)';
+    });
   }
 }
 

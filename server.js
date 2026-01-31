@@ -7,9 +7,13 @@ const authRoutes = require('./routes/auth');
 const linksRoutes = require('./routes/links');
 const pagesRoutes = require('./routes/pages');
 const analyticsRoutes = require('./routes/analytics');
+const billingRoutes = require('./routes/billing');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Stripe webhook needs raw body - must be before express.json()
+app.use('/api/billing/webhook', express.raw({ type: 'application/json' }));
 
 // Middleware
 app.use(express.json());
@@ -21,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/links', linksRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/billing', billingRoutes);
 
 // Public profile pages (must be last to catch /:username)
 app.use('/', pagesRoutes);

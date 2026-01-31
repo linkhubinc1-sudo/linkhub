@@ -21,6 +21,10 @@ router.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/dashboard.html'));
 });
 
+router.get('/pricing', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/pricing.html'));
+});
+
 // Public profile page - must be last!
 router.get('/:username', (req, res) => {
   const { username } = req.params;
@@ -51,18 +55,33 @@ router.get('/api/profile/:username', (req, res) => {
   const { username } = req.params;
 
   const user = db.prepare(
-    'SELECT id, username, display_name, bio, avatar_url, theme FROM users WHERE username = ?'
+    'SELECT id, username, display_name, bio, avatar_url, theme, plan, plan_expires_at FROM users WHERE username = ?'
   ).get(username.toLowerCase());
 
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }
 
+  // Check if Pro (for hiding branding)
+  const isPro = user.plan === 'pro' &&
+    (!user.plan_expires_at || new Date(user.plan_expires_at) > new Date());
+
   const links = db.prepare(
     'SELECT id, title, url, icon FROM links WHERE user_id = ? AND is_active = 1 ORDER BY position ASC'
   ).all(user.id);
 
-  res.json({ user, links });
+  res.json({
+    user: {
+      id: user.id,
+      username: user.username,
+      display_name: user.display_name,
+      bio: user.bio,
+      avatar_url: user.avatar_url,
+      theme: user.theme,
+      isPro
+    },
+    links
+  });
 });
 
 module.exports = router;
