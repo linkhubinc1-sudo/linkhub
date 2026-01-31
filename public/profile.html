@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading... - LinkHub</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="profile-page" id="profilePage">
+    <div class="profile-header">
+      <div class="profile-avatar" id="avatar"></div>
+      <h1 class="profile-name" id="displayName">Loading...</h1>
+      <p class="profile-bio" id="bio"></p>
+    </div>
+
+    <div class="profile-links" id="linksList">
+      <!-- Links loaded dynamically -->
+    </div>
+
+    <p class="profile-branding">
+      <a href="/">Made with LinkHub</a>
+    </p>
+  </div>
+
+  <script>
+    // Get username from URL
+    const username = window.location.pathname.slice(1);
+
+    async function loadProfile() {
+      try {
+        const res = await fetch(`/api/profile/${username}`);
+        if (!res.ok) {
+          window.location.href = '/404.html';
+          return;
+        }
+
+        const { user, links } = await res.json();
+
+        // Update page title
+        document.title = `${user.display_name || user.username} - LinkHub`;
+
+        // Apply theme
+        if (user.theme && user.theme !== 'default') {
+          document.body.classList.add(`theme-${user.theme}`);
+        }
+
+        // Update profile info
+        const avatarEl = document.getElementById('avatar');
+        if (user.avatar_url) {
+          avatarEl.innerHTML = `<img src="${escapeHtml(user.avatar_url)}" alt="${escapeHtml(user.display_name || user.username)}">`;
+        } else {
+          avatarEl.textContent = (user.display_name || user.username).charAt(0).toUpperCase();
+        }
+
+        document.getElementById('displayName').textContent = user.display_name || user.username;
+        document.getElementById('bio').textContent = user.bio || '';
+
+        // Render links
+        const linksList = document.getElementById('linksList');
+        if (links.length === 0) {
+          linksList.innerHTML = '<p style="color: var(--text-muted); text-align: center;">No links yet</p>';
+        } else {
+          linksList.innerHTML = links.map(link => `
+            <a href="${escapeHtml(link.url)}"
+               class="profile-link"
+               target="_blank"
+               rel="noopener"
+               onclick="trackClick(${link.id})">
+              ${escapeHtml(link.title)}
+            </a>
+          `).join('');
+        }
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      }
+    }
+
+    async function trackClick(linkId) {
+      try {
+        await fetch(`/api/analytics/click/${linkId}`, { method: 'POST' });
+      } catch (err) {
+        // Silent fail - don't block the user
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

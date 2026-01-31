@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - LinkHub</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <a href="/" class="logo">LinkHub</a>
+      <nav class="sidebar-nav">
+        <a href="#links" class="active" data-tab="links">Links</a>
+        <a href="#analytics" data-tab="analytics">Analytics</a>
+        <a href="#settings" data-tab="settings">Settings</a>
+      </nav>
+      <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border);">
+        <a href="#" id="viewProfile" style="display: block; color: var(--text-muted); margin-bottom: 0.5rem;">
+          View My Page
+        </a>
+        <a href="#" id="logoutBtn" style="color: var(--danger);">Log Out</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- Links Tab -->
+      <section id="links-tab" class="tab-content active">
+        <div class="page-header">
+          <h1>Your Links</h1>
+          <button class="btn btn-primary" id="addLinkBtn">+ Add Link</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Total Views</h3>
+            <div class="value" id="totalViews">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Total Clicks</h3>
+            <div class="value" id="totalClicks">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Click Rate</h3>
+            <div class="value" id="clickRate">0%</div>
+          </div>
+        </div>
+
+        <div class="links-list" id="linksList">
+          <p style="color: var(--text-muted); text-align: center; padding: 2rem;">
+            Loading your links...
+          </p>
+        </div>
+      </section>
+
+      <!-- Analytics Tab -->
+      <section id="analytics-tab" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <h1>Analytics</h1>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Views (7 days)</h3>
+            <div class="value" id="views7d">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Clicks (7 days)</h3>
+            <div class="value" id="clicks7d">0</div>
+          </div>
+        </div>
+
+        <h2 style="margin: 2rem 0 1rem;">Top Performing Links</h2>
+        <div id="topLinks" class="links-list"></div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section id="settings-tab" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <h1>Profile Settings</h1>
+        </div>
+
+        <div style="max-width: 600px;">
+          <form id="settingsForm">
+            <div class="form-group">
+              <label for="displayName">Display Name</label>
+              <input type="text" id="displayName" placeholder="Your Name">
+            </div>
+
+            <div class="form-group">
+              <label for="bio">Bio</label>
+              <textarea id="bio" rows="3" placeholder="Tell the world about yourself"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="avatarUrl">Avatar URL</label>
+              <input type="url" id="avatarUrl" placeholder="https://example.com/your-photo.jpg">
+            </div>
+
+            <div class="form-group">
+              <label for="theme">Theme</label>
+              <select id="theme">
+                <option value="default">Default (Purple/Pink)</option>
+                <option value="sunset">Sunset (Orange/Pink)</option>
+                <option value="ocean">Ocean (Cyan/Blue)</option>
+                <option value="forest">Forest (Green/Teal)</option>
+                <option value="midnight">Midnight (Purple/Indigo)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add/Edit Link Modal -->
+  <div class="modal-overlay" id="linkModal">
+    <div class="modal">
+      <h2 id="modalTitle">Add New Link</h2>
+      <form id="linkForm">
+        <input type="hidden" id="linkId">
+        <div class="form-group">
+          <label for="linkTitle">Title</label>
+          <input type="text" id="linkTitle" required placeholder="My Website">
+        </div>
+        <div class="form-group">
+          <label for="linkUrl">URL</label>
+          <input type="url" id="linkUrl" required placeholder="https://example.com">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toasts"></div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkHub - One Link for Everything</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="landing">
+    <nav class="nav">
+      <div class="logo">LinkHub</div>
+      <div class="nav-links">
+        <a href="/login" class="btn btn-secondary btn-small">Log In</a>
+        <a href="/register" class="btn btn-primary btn-small">Sign Up Free</a>
+      </div>
+    </nav>
+
+    <main class="hero">
+      <h1>One Link for <span>Everything</span></h1>
+      <p>
+        Share all your content, social profiles, and links in one beautiful,
+        customizable page. Perfect for creators, influencers, and businesses.
+      </p>
+      <div class="hero-cta">
+        <a href="/register" class="btn btn-primary">Get Started - It's Free</a>
+        <a href="#features" class="btn btn-secondary">See How It Works</a>
+      </div>
+    </main>
+
+    <section id="features" style="padding: 4rem 2rem; max-width: 1000px; margin: 0 auto;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+        <div class="stat-card">
+          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Unlimited Links</h3>
+          <p style="color: var(--text-muted);">Add as many links as you want. Social profiles, websites, stores - all in one place.</p>
+        </div>
+        <div class="stat-card">
+          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Click Analytics</h3>
+          <p style="color: var(--text-muted);">Track every click. See what's working and optimize your content strategy.</p>
+        </div>
+        <div class="stat-card">
+          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Beautiful Themes</h3>
+          <p style="color: var(--text-muted);">Choose from multiple themes to match your personal brand and style.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Check if already logged in
+    fetch('/api/auth/me')
+      .then(r => r.ok ? window.location.href = '/dashboard' : null)
+      .catch(() => {});
+  </script>
+</body>
+</html>
