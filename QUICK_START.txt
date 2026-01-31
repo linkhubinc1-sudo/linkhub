@@ -1,0 +1,59 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                    LINKHUB QUICK START                             ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+STEP 1: INSTALL NODE.JS
+────────────────────────
+Download from: https://nodejs.org (click the LTS button)
+
+
+STEP 2: RUN LOCALLY (test it works)
+───────────────────────────────────
+Open PowerShell, then:
+
+    cd C:\Users\jamoo\projects\linkhub
+    npm install
+    npm start
+
+Open browser: http://localhost:3000
+
+
+STEP 3: DEPLOY (make it live)
+─────────────────────────────
+a) Push to GitHub:
+    - Go to github.com/new
+    - Create repo named "linkhub"
+    - Run these commands:
+        git remote add origin https://github.com/YOURUSERNAME/linkhub.git
+        git push -u origin master
+
+b) Deploy on Railway:
+    - Go to railway.app
+    - Login with GitHub
+    - New Project → Deploy from GitHub
+    - Select your linkhub repo
+    - Add environment variables (see SETUP_GUIDE.md)
+
+
+STEP 4: SET UP PAYMENTS
+───────────────────────
+    - Create Stripe account: stripe.com
+    - Get API key: Dashboard → Developers → API keys
+    - Create product: Dashboard → Products → Add Product
+    - Add to Railway environment variables
+
+
+STEP 5: DAILY MARKETING (5-10 min)
+──────────────────────────────────
+Run this command for today's content:
+
+    node marketing/autopilot.js
+
+Copy the tweet. Post it. Send 2 DMs. Done.
+
+
+═══════════════════════════════════════════════════════════════════
+
+THAT'S IT. QUESTIONS? Ask Claude.
+
+═══════════════════════════════════════════════════════════════════
