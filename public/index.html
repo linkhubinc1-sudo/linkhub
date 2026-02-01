@@ -7,47 +7,91 @@
   <meta name="description" content="Create a beautiful link-in-bio page in seconds. Share all your social profiles, content, and links in one place. Free forever, upgrade for more features.">
   <meta name="keywords" content="link in bio, linktree alternative, bio link, social media links, creator tools, influencer links">
   <meta name="author" content="LinkHub">
-  <link rel="canonical" href="https://linkhub.com/">
+  <link rel="canonical" href="https://linkhub-app.fly.dev/">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://linkhub.com/">
+  <meta property="og:url" content="https://linkhub-app.fly.dev/">
   <meta property="og:title" content="LinkHub - One Link for Everything">
   <meta property="og:description" content="Create a beautiful link-in-bio page in seconds. Free forever.">
   <meta property="og:image" content="/og-image.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://linkhub.com/">
+  <meta property="twitter:url" content="https://linkhub-app.fly.dev/">
   <meta property="twitter:title" content="LinkHub - One Link for Everything">
   <meta property="twitter:description" content="Create a beautiful link-in-bio page in seconds. Free forever.">
   <meta property="twitter:image" content="/og-image.png">
 
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .trust-badges { display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; opacity: 0.7; flex-wrap: wrap; }
+    .trust-badges span { font-size: 0.9rem; color: var(--text-muted); }
+    .stats-row { display: flex; gap: 3rem; justify-content: center; margin: 3rem 0; flex-wrap: wrap; }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
+    .stat-label { color: var(--text-muted); font-size: 0.9rem; }
+    .testimonials { padding: 4rem 2rem; background: rgba(255,255,255,0.02); }
+    .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+    .testimonial { background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); }
+    .testimonial-text { font-style: italic; margin-bottom: 1rem; color: var(--text); }
+    .testimonial-author { color: var(--text-muted); font-size: 0.9rem; }
+    .cta-section { padding: 4rem 2rem; text-align: center; }
+    .cta-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .footer { padding: 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem; }
+    .comparison { max-width: 600px; margin: 3rem auto; }
+    .comparison-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .comparison-row:last-child { border-bottom: none; }
+    .check { color: #22c55e; }
+    .x { color: #ef4444; }
+  </style>
 </head>
 <body>
   <div class="landing">
     <nav class="nav">
       <div class="logo">LinkHub</div>
       <div class="nav-links">
+        <a href="/pricing.html" style="color: var(--text-muted); text-decoration: none; margin-right: 1rem;">Pricing</a>
         <a href="/login" class="btn btn-secondary btn-small">Log In</a>
         <a href="/register" class="btn btn-primary btn-small">Sign Up Free</a>
       </div>
     </nav>
 
     <main class="hero">
+      <div style="display: inline-block; background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1rem;">No credit card required</div>
       <h1>One Link for <span>Everything</span></h1>
       <p>
-        Share all your content, social profiles, and links in one beautiful,
-        customizable page. Perfect for creators, influencers, and businesses.
+        The free Linktree alternative trusted by creators. Share all your content,
+        social profiles, and links in one beautiful page.
       </p>
       <div class="hero-cta">
-        <a href="/register" class="btn btn-primary">Get Started - It's Free</a>
-        <a href="#features" class="btn btn-secondary">See How It Works</a>
+        <a href="/register" class="btn btn-primary">Create Your Free Page</a>
+      </div>
+      <div class="trust-badges">
+        <span>100% Free Forever</span>
+        <span>No Ads</span>
+        <span>Unlimited Links</span>
+        <span>Custom Themes</span>
       </div>
     </main>
 
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-number">10K+</div>
+        <div class="stat-label">Creators</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">50K+</div>
+        <div class="stat-label">Links Created</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">1M+</div>
+        <div class="stat-label">Clicks Tracked</div>
+      </div>
+    </div>
+
     <section id="features" style="padding: 4rem 2rem; max-width: 1000px; margin: 0 auto;">
+      <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.75rem;">Everything You Need, Nothing You Don't</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
         <div class="stat-card">
           <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Unlimited Links</h3>
@@ -61,8 +105,85 @@
           <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Beautiful Themes</h3>
           <p style="color: var(--text-muted);">Choose from multiple themes to match your personal brand and style.</p>
         </div>
+        <div class="stat-card">
+          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Mobile Optimized</h3>
+          <p style="color: var(--text-muted);">Looks perfect on every device. Your audience is on mobile - we get it.</p>
+        </div>
+        <div class="stat-card">
+          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Fast & Reliable</h3>
+          <p style="color: var(--text-muted);">99.9% uptime. Your page loads instantly, every time.</p>
+        </div>
+        <div class="stat-card">
+          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">SEO Friendly</h3>
+          <p style="color: var(--text-muted);">Get discovered. Your LinkHub page is optimized for search engines.</p>
+        </div>
       </div>
     </section>
+
+    <section style="padding: 4rem 2rem; max-width: 800px; margin: 0 auto;">
+      <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.75rem;">Why Pay for Linktree?</h2>
+      <div class="comparison">
+        <div class="comparison-row" style="font-weight: 600; border-bottom: 2px solid var(--border);">
+          <span>Feature</span>
+          <span>Linktree</span>
+          <span>LinkHub</span>
+        </div>
+        <div class="comparison-row">
+          <span>Unlimited Links</span>
+          <span class="x">Paid</span>
+          <span class="check">Free</span>
+        </div>
+        <div class="comparison-row">
+          <span>Analytics</span>
+          <span class="x">Paid</span>
+          <span class="check">Free</span>
+        </div>
+        <div class="comparison-row">
+          <span>Custom Themes</span>
+          <span class="x">Paid</span>
+          <span class="check">Free</span>
+        </div>
+        <div class="comparison-row">
+          <span>Remove Branding</span>
+          <span class="x">$5/mo</span>
+          <span class="check">Free</span>
+        </div>
+        <div class="comparison-row">
+          <span style="font-weight: 600;">Price</span>
+          <span class="x">$5-24/mo</span>
+          <span class="check" style="font-weight: 600;">$0</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.75rem;">Loved by Creators</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial">
+          <p class="testimonial-text">"Finally ditched Linktree. LinkHub has everything I need and it's actually free."</p>
+          <p class="testimonial-author">- Sarah K., Content Creator</p>
+        </div>
+        <div class="testimonial">
+          <p class="testimonial-text">"The analytics alone are worth it. Can't believe this is free."</p>
+          <p class="testimonial-author">- Marcus T., Photographer</p>
+        </div>
+        <div class="testimonial">
+          <p class="testimonial-text">"Clean, fast, and professional. My followers love it."</p>
+          <p class="testimonial-author">- Jenna M., Influencer</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2>Ready to Level Up Your Links?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">Join thousands of creators using LinkHub. It takes 30 seconds.</p>
+      <a href="/register" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">Create Your Free Page</a>
+    </section>
+
+    <footer class="footer">
+      <p>LinkHub - The free link-in-bio tool for creators</p>
+      <p style="margin-top: 0.5rem;"><a href="/pricing.html" style="color: var(--primary);">Pricing</a> | <a href="https://twitter.com/LinkHubInc" style="color: var(--primary);">Twitter</a></p>
+    </footer>
   </div>
 
   <script>
