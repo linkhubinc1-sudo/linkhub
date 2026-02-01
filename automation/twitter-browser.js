@@ -13,7 +13,8 @@ const path = require('path');
 const config = require('./config');
 
 const COOKIES_FILE = path.join(__dirname, '.twitter-cookies.json');
-const USER_DATA_DIR = path.join(__dirname, '.chrome-data');
+const USER_DATA_DIR = 'C:/Users/jamoo/AppData/Local/BraveSoftware/Brave-Browser/User Data';
+const BRAVE_PATH = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe';
 
 // Tweet templates
 const tweets = [
@@ -57,15 +58,20 @@ function getNextTweet() {
 async function launchBrowser(headless = false) {
   const browser = await puppeteer.launch({
     headless: headless ? 'new' : false,
+    executablePath: BRAVE_PATH,
     userDataDir: USER_DATA_DIR,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-blink-features=AutomationControlled',
+      '--profile-directory=Default',
+      '--window-size=1280,800',
     ],
-    defaultViewport: { width: 1280, height: 800 },
+    defaultViewport: null,
+    ignoreDefaultArgs: ['--enable-automation'],
   });
+
   return browser;
 }
 
@@ -107,8 +113,13 @@ async function postTweet(tweetText = null) {
 
   let browser;
   try {
-    browser = await launchBrowser(true); // headless
+    browser = await launchBrowser(false); // visible browser to avoid detection
     const page = await browser.newPage();
+
+    // Hide webdriver detection
+    await page.evaluateOnNewDocument(() => {
+      Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+    });
 
     // Set user agent to look like real browser
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
