@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: linkhub
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: linkhub-prod-secret-xyz789abc123def
+      - key: ADMIN_EMAIL
+        value: linkhubinc1@gmail.com
+      - key: ADMIN_PASSWORD
+        value: linkhub-admin-2024
+      - key: TWITTER_API_KEY
+        value: 0jkzyEF9z8jeIhWSP8X4Zs0yL
+      - key: TWITTER_API_SECRET
+        value: OF9echkvKgftFBWjW3fcweIvN284UnRaZQzISvQ5dUv17lDqFq
+      - key: TWITTER_ACCESS_TOKEN
+        value: 2017401926762061824-kVSeguWOj2pWWQSmD5eHtnPVGpdClo
+      - key: TWITTER_ACCESS_TOKEN_SECRET
+        value: HzEtcVPEl03s8IyhhQagbwW1FC3lEMemy7dbbczlQR5UH
+      - key: TWITTER_BEARER_TOKEN
+        value: AAAAAAAAAAAAAAAAAAAAANs27QEAAAAAk5D%2FbTqWW3OAZ12Zwj3gQh%2B9eS0%3D1QSMweugzxt2XaTMa1xnprI6chdSZDYEeAQrWjATqDp8FvpCW5
