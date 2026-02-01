@@ -2,15 +2,21 @@ require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const db = require('./database');
-const authRoutes = require('./routes/auth');
-const linksRoutes = require('./routes/links');
-const pagesRoutes = require('./routes/pages');
-const analyticsRoutes = require('./routes/analytics');
-const billingRoutes = require('./routes/billing');
+const { initDB } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Start server after DB is ready
+async function startServer() {
+  await initDB();
+
+  const authRoutes = require('./routes/auth');
+  const linksRoutes = require('./routes/links');
+  const pagesRoutes = require('./routes/pages');
+  const analyticsRoutes = require('./routes/analytics');
+  const billingRoutes = require('./routes/billing');
+  const adminDashboard = require('./automation/admin-dashboard');
 
 // Stripe webhook needs raw body - must be before express.json()
 app.use('/api/billing/webhook', express.raw({ type: 'application/json' }));
@@ -26,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/links', linksRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/', adminDashboard);
 
 // Public profile pages (must be last to catch /:username)
 app.use('/', pagesRoutes);
@@ -36,14 +43,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-app.listen(PORT, () => {
-  console.log(`
-  ╔═══════════════════════════════════════════╗
-  ║                                           ║
-  ║   🔗 LinkHub is running!                  ║
-  ║                                           ║
-  ║   Local:  http://localhost:${PORT}           ║
-  ║                                           ║
-  ╚═══════════════════════════════════════════╝
-  `);
-});
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`LinkHub running on port ${PORT}`);
+  });
+}
+
+startServer().catch(console.error);

@@ -5,19 +5,39 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "autopilot": "node automation/scheduler.js",
+    "autopilot:once": "node automation/scheduler.js --once",
+    "tweet": "node automation/twitter-bot.js --post",
+    "report": "node automation/email-reporter.js",
+    "leads": "node automation/lead-finder.js",
+    "leads:50": "node automation/lead-finder.js --count 50 --export",
+    "grind": "node automation/daily-grind.js",
+    "dm": "node automation/auto-dm.js",
+    "dm:test": "node automation/auto-dm.js --dry-run",
+    "panel": "node automation/control-panel.js",
+    "twitter:login": "node automation/twitter-browser.js --login",
+    "twitter:tweet": "node automation/twitter-browser.js --tweet"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "better-sqlite3": "^9.4.3",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.4.1",
-    "uuid": "^9.0.0",
-    "stripe": "^14.14.0"
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.8",
+    "puppeteer": "^24.36.1",
+    "puppeteer-core": "^24.36.1",
+    "sql.js": "^1.13.0",
+    "stripe": "^14.14.0",
+    "twitter-api-v2": "^1.29.0",
+    "uuid": "^9.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10"
   }
 }
