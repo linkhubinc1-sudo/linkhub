@@ -81,63 +81,56 @@ app.get('/api/leads', (req, res) => {
 });
 
 app.post('/api/action/tweet', async (req, res) => {
-  const { postTweet } = require('./twitter-browser');
-  const result = await postTweet(req.body.text);
-  if (result.success) {
+  const { postTweet, getNextTweet } = require('./twitter-bot');
+  const text = req.body.text || getNextTweet();
+  const result = await postTweet(text);
+  if (result) {
     automationStatus.lastTweet = new Date().toISOString();
     automationStatus.tweetsPosted++;
+    res.json({ success: true, tweet: text });
+  } else {
+    res.json({ success: false, error: 'Failed to post tweet' });
   }
-  res.json(result);
 });
 
 app.post('/api/action/dm', async (req, res) => {
-  const { sendDM } = require('./twitter-browser');
-  const { username, message } = req.body;
-  const result = await sendDM(username, message);
-  if (result.success) {
+  const { runAutoDM } = require('./auto-dm');
+  const { username } = req.body;
+  // For single DM, we'll use the auto-dm in test mode
+  try {
+    await runAutoDM({ count: 1, testUser: username, dryRun: false });
     automationStatus.lastDM = new Date().toISOString();
     automationStatus.dmsSent++;
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, error: err.message });
   }
-  res.json(result);
 });
 
 app.post('/api/action/find-leads', async (req, res) => {
-  const { searchAndFindLeads } = require('./twitter-browser');
-  const leads = await searchAndFindLeads(req.body.query || 'linktree alternative');
+  const { findLeads } = require('./lead-finder');
+  const count = req.body.count || 20;
+  const niche = req.body.niche || null;
+  const leads = await findLeads({ count, niche });
   automationStatus.leadsFound += leads.length;
-  res.json({ leads });
+  res.json({ leads, count: leads.length });
 });
 
-app.post('/api/scheduler/start', (req, res) => {
-  if (schedulerProcess) {
-    return res.json({ error: 'Already running' });
+app.post('/api/action/send-dms', async (req, res) => {
+  const { runAutoDM } = require('./auto-dm');
+  const count = req.body.count || 10;
+  try {
+    await runAutoDM({ count, dryRun: false });
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, error: err.message });
   }
-
-  schedulerProcess = spawn('node', ['scheduler.js'], {
-    cwd: __dirname,
-    detached: true,
-    stdio: 'ignore',
-  });
-
-  schedulerProcess.unref();
-  automationStatus.scheduler = 'running';
-  res.json({ status: 'started' });
 });
 
-app.post('/api/scheduler/stop', (req, res) => {
-  if (schedulerProcess) {
-    schedulerProcess.kill();
-    schedulerProcess = null;
-  }
-  automationStatus.scheduler = 'stopped';
-  res.json({ status: 'stopped' });
-});
-
-app.post('/api/twitter/login', async (req, res) => {
-  const { loginManually } = require('./twitter-browser');
-  // This opens a browser window
-  loginManually();
-  res.json({ status: 'Browser opened. Log in and close it when done.' });
+// Preview next tweet
+app.get('/api/preview-tweet', (req, res) => {
+  const { getNextTweet } = require('./twitter-bot');
+  res.json({ tweet: getNextTweet() });
 });
 
 // Serve control panel HTML
@@ -252,10 +245,7 @@ app.get('/', (req, res) => {
 </head>
 <body>
   <div class="container">
-    <h1>
-      🎛️ LinkHub Control Panel
-      <span id="status-badge" class="stopped">Stopped</span>
-    </h1>
+    <h1>🎛️ LinkHub Control Panel</h1>
 
     <div class="config-status">
       <div class="config-item">
@@ -273,12 +263,11 @@ app.get('/', (req, res) => {
     </div>
 
     <div class="actions">
-      <button onclick="startScheduler()" id="start-btn" class="success">▶️ Start Automation</button>
-      <button onclick="stopScheduler()" id="stop-btn" class="danger">⏹️ Stop</button>
-      <button onclick="openTweetModal()">🐦 Post Tweet</button>
-      <button onclick="openDMModal()">📨 Send DM</button>
-      <button onclick="findLeads()">🔍 Find Leads</button>
-      <button onclick="twitterLogin()">🔐 Twitter Login</button>
+      <button onclick="postAutoTweet()" class="success">🐦 Post Tweet</button>
+      <button onclick="findLeads()">🔍 Find 20 Leads</button>
+      <button onclick="sendBulkDMs()">📨 Send 10 DMs</button>
+      <button onclick="openTweetModal()">✏️ Custom Tweet</button>
+      <button onclick="openDMModal()">💬 Single DM</button>
     </div>
 
     <div class="grid">
@@ -405,35 +394,49 @@ app.get('/', (req, res) => {
       log.innerHTML = \`<div class="log-entry">[\${time}] \${message}</div>\` + log.innerHTML;
     }
 
-    async function startScheduler() {
-      addLog('Starting automation...');
-      await fetch('/api/scheduler/start', { method: 'POST' });
-      addLog('✅ Automation started');
+    async function postAutoTweet() {
+      addLog('Posting tweet...');
+      const res = await fetch('/api/action/tweet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      const data = await res.json();
+      if (data.success) {
+        addLog('✅ Tweet posted: ' + (data.tweet?.substring(0, 40) || '') + '...');
+      } else {
+        addLog('❌ Tweet failed: ' + (data.error || 'Unknown error'));
+      }
       fetchStatus();
-    }
-
-    async function stopScheduler() {
-      addLog('Stopping automation...');
-      await fetch('/api/scheduler/stop', { method: 'POST' });
-      addLog('⏹️ Automation stopped');
-      fetchStatus();
-    }
-
-    async function twitterLogin() {
-      addLog('Opening Twitter login...');
-      await fetch('/api/twitter/login', { method: 'POST' });
-      addLog('Browser opened - log in and close when done');
     }
 
     async function findLeads() {
-      addLog('Searching for leads...');
+      addLog('Searching for leads (this takes ~30 sec)...');
       const res = await fetch('/api/action/find-leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: 'linktree alternative' })
+        body: JSON.stringify({ count: 20 })
       });
       const data = await res.json();
-      addLog(\`Found \${data.leads?.length || 0} leads\`);
+      addLog(\`✅ Found \${data.count || 0} new leads\`);
+      fetchLeads();
+      fetchStatus();
+    }
+
+    async function sendBulkDMs() {
+      addLog('Sending DMs to 10 leads (1 min between each)...');
+      addLog('⏳ This will take ~10 minutes. Check back later.');
+      const res = await fetch('/api/action/send-dms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count: 10 })
+      });
+      const data = await res.json();
+      if (data.success) {
+        addLog('✅ DM batch complete');
+      } else {
+        addLog('❌ DM batch failed: ' + (data.error || 'Unknown error'));
+      }
       fetchLeads();
       fetchStatus();
     }
