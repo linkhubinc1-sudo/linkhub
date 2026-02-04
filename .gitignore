@@ -3,6 +3,8 @@ node_modules/
 *.db
 .DS_Store
 .chrome-data/
+.browser-profile/
+automation/.browser-profile/
 .twitter-cookies.json
 .tweet-history*.json
 dm-log.json
