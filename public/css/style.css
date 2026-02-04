@@ -503,6 +503,60 @@ a:hover {
   font-size: 0.875rem;
 }
 
+/* Viral "Powered by" badge for free users */
+.powered-badge {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.powered-badge a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  color: var(--text);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.powered-badge a:hover {
+  background: var(--gradient);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.powered-badge .badge-icon {
+  font-size: 1rem;
+}
+
+.powered-badge .badge-text {
+  color: var(--text-muted);
+}
+
+.powered-badge a:hover .badge-text {
+  color: white;
+}
+
+.powered-badge .badge-brand {
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.powered-badge a:hover .badge-brand {
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* Theme variations */
 .theme-sunset {
   --primary: #f97316;

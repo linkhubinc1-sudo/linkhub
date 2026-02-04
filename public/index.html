@@ -146,7 +146,7 @@
         <div class="comparison-row">
           <span>Remove Branding</span>
           <span class="x">$5/mo</span>
-          <span class="check">Free</span>
+          <span class="check">$5/mo</span>
         </div>
         <div class="comparison-row">
           <span style="font-weight: 600;">Price</span>
@@ -191,6 +191,17 @@
     fetch('/api/auth/me')
       .then(r => r.ok ? window.location.href = '/dashboard' : null)
       .catch(() => {});
+
+    // Store referral code if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+    if (ref) {
+      sessionStorage.setItem('referralCode', ref);
+      // Update signup links to include referral
+      document.querySelectorAll('a[href="/register"]').forEach(link => {
+        link.href = `/register?ref=${ref}`;
+      });
+    }
   </script>
 </body>
 </html>

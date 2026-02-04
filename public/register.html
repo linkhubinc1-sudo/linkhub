@@ -42,10 +42,23 @@
       <p class="auth-footer">
         Already have an account? <a href="/login">Log in</a>
       </p>
+
+      <!-- Referral notice (shown when ?ref= is in URL) -->
+      <div id="referralNotice" style="display: none; margin-top: 1rem; padding: 0.75rem; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary); border-radius: 0.5rem; text-align: center;">
+        <span style="color: var(--primary);">You were referred by a friend - welcome!</span>
+      </div>
     </div>
   </div>
 
   <script>
+    // Get referral code from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const referralCode = urlParams.get('ref');
+
+    if (referralCode) {
+      document.getElementById('referralNotice').style.display = 'block';
+    }
+
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const errorEl = document.getElementById('error');
@@ -59,7 +72,7 @@
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, email, password })
+          body: JSON.stringify({ username, email, password, referralCode })
         });
 
         const data = await res.json();

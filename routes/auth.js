@@ -5,10 +5,13 @@ const { generateToken, authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Import referral tracking (lazy to avoid circular deps)
+let trackReferral = null;
+
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, referralCode } = req.body;
 
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
@@ -39,6 +42,15 @@ router.post('/register', async (req, res) => {
     ).run(username.toLowerCase(), email.toLowerCase(), hashedPassword, username);
 
     const user = { id: result.lastInsertRowid, username: username.toLowerCase(), email: email.toLowerCase() };
+
+    // Track referral if code provided
+    if (referralCode) {
+      if (!trackReferral) {
+        trackReferral = require('./referral').trackReferral;
+      }
+      trackReferral(referralCode, user.id);
+    }
+
     const token = generateToken(user);
 
     res.cookie('token', token, {

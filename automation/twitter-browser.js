@@ -13,8 +13,10 @@ const path = require('path');
 const config = require('./config');
 
 const COOKIES_FILE = path.join(__dirname, '.twitter-cookies.json');
-const USER_DATA_DIR = 'C:/Users/jamoo/AppData/Local/BraveSoftware/Brave-Browser/User Data';
-const BRAVE_PATH = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe';
+// Use a SEPARATE profile for automation (avoids conflicts with your main browser)
+const USER_DATA_DIR = path.join(__dirname, '.browser-profile');
+// Use Puppeteer's bundled Chromium (most reliable)
+const BROWSER_PATH = null; // null = use bundled Chromium
 
 // Tweet templates
 const tweets = [
@@ -56,22 +58,31 @@ function getNextTweet() {
 }
 
 async function launchBrowser(headless = false) {
-  const browser = await puppeteer.launch({
+  // Ensure profile directory exists
+  if (!fs.existsSync(USER_DATA_DIR)) {
+    fs.mkdirSync(USER_DATA_DIR, { recursive: true });
+  }
+
+  const launchOptions = {
     headless: headless ? 'new' : false,
-    executablePath: BRAVE_PATH,
     userDataDir: USER_DATA_DIR,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-blink-features=AutomationControlled',
-      '--profile-directory=Default',
       '--window-size=1280,800',
     ],
     defaultViewport: null,
     ignoreDefaultArgs: ['--enable-automation'],
-  });
+  };
 
+  // Only set executablePath if we have a custom browser path
+  if (BROWSER_PATH) {
+    launchOptions.executablePath = BROWSER_PATH;
+  }
+
+  const browser = await puppeteer.launch(launchOptions);
   return browser;
 }
 

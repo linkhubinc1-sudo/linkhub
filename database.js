@@ -86,6 +86,34 @@ async function initDB() {
     )
   `);
 
+  // Referral system
+  db.run(`
+    CREATE TABLE IF NOT EXISTS referrals (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      referrer_id INTEGER NOT NULL,
+      referred_id INTEGER,
+      referral_code TEXT UNIQUE NOT NULL,
+      status TEXT DEFAULT 'pending',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      completed_at DATETIME,
+      FOREIGN KEY (referrer_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (referred_id) REFERENCES users(id) ON DELETE SET NULL
+    )
+  `);
+
+  // Add referral_code column to users if not exists
+  try {
+    db.run(`ALTER TABLE users ADD COLUMN referral_code TEXT`);
+  } catch (e) {
+    // Column already exists, ignore
+  }
+
+  try {
+    db.run(`ALTER TABLE users ADD COLUMN referred_by INTEGER`);
+  } catch (e) {
+    // Column already exists, ignore
+  }
+
   // Save to disk
   saveDB();
 

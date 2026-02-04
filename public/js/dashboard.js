@@ -1,13 +1,16 @@
 // Dashboard JavaScript
 let currentUser = null;
 let links = [];
+let referralData = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
   await checkAuth();
   await loadLinks();
   await loadAnalytics();
+  await loadReferralData();
   setupEventListeners();
+  setupReferralListeners();
 });
 
 // Check authentication
@@ -428,4 +431,70 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+// Referral System
+async function loadReferralData() {
+  try {
+    const [codeRes, statsRes] = await Promise.all([
+      fetch('/api/referral/code'),
+      fetch('/api/referral/stats')
+    ]);
+
+    const codeData = await codeRes.json();
+    const statsData = await statsRes.json();
+
+    referralData = { ...codeData, ...statsData };
+
+    // Update sidebar referral count
+    document.getElementById('referralCount').textContent =
+      `${referralData.totalReferrals} referral${referralData.totalReferrals !== 1 ? 's' : ''}`;
+
+  } catch (err) {
+    console.error('Failed to load referral data:', err);
+  }
+}
+
+function setupReferralListeners() {
+  // Open referral modal
+  document.getElementById('shareReferralBtn').addEventListener('click', () => {
+    openReferralModal();
+  });
+
+  // Close referral modal
+  document.getElementById('closeReferralModal').addEventListener('click', () => {
+    document.getElementById('referralModal').classList.remove('active');
+  });
+
+  // Close on overlay click
+  document.getElementById('referralModal').addEventListener('click', (e) => {
+    if (e.target.id === 'referralModal') {
+      document.getElementById('referralModal').classList.remove('active');
+    }
+  });
+
+  // Copy referral link
+  document.getElementById('copyReferralBtn').addEventListener('click', () => {
+    const input = document.getElementById('referralLinkInput');
+    input.select();
+    document.execCommand('copy');
+    showToast('Link copied to clipboard!', 'success');
+  });
+
+  // Share on Twitter/X
+  document.getElementById('shareTwitterBtn').addEventListener('click', () => {
+    const text = encodeURIComponent(`I just found the best free link-in-bio tool. Way better than Linktree and it's actually FREE.\n\nCheck it out:`);
+    const url = encodeURIComponent(referralData.link);
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+  });
+}
+
+function openReferralModal() {
+  if (!referralData) return;
+
+  document.getElementById('referralLinkInput').value = referralData.link;
+  document.getElementById('modalReferralCount').textContent = referralData.totalReferrals;
+  document.getElementById('modalEarnings').textContent = `$${referralData.earnings}`;
+
+  document.getElementById('referralModal').classList.add('active');
 }

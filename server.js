@@ -16,6 +16,7 @@ async function startServer() {
   const pagesRoutes = require('./routes/pages');
   const analyticsRoutes = require('./routes/analytics');
   const billingRoutes = require('./routes/billing');
+  const referralRoutes = require('./routes/referral');
   const adminDashboard = require('./automation/admin-dashboard');
 
 // Stripe webhook needs raw body - must be before express.json()
@@ -32,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/links', linksRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/api/referral', referralRoutes);
 app.use('/', adminDashboard);
 
 // Public profile pages (must be last to catch /:username)
