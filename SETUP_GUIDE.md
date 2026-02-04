@@ -2,6 +2,40 @@
 
 This guide is for people who want to do the absolute minimum work.
 
+---
+
+## CURRENT STATUS (Last updated: Feb 3, 2026)
+
+### ✅ COMPLETED
+- [x] Code pushed to GitHub: https://github.com/linkhubinc1-sudo/linkhub
+- [x] Twitter API keys configured
+- [x] Stripe account created (test mode)
+- [x] Stripe monthly price ID set (`price_1SvqOdGURQ9dmmIltzjd8Jxu`)
+
+### ⏳ REMAINING (You must do these manually)
+
+**1. Login to Railway and deploy (5 min)**
+```
+railway login
+```
+Then in browser: https://railway.app → New Project → Deploy from GitHub → select linkhub
+
+**2. Set Railway environment variables:**
+Copy all values from your local `.env` file into Railway's environment variables panel.
+Required vars: `JWT_SECRET`, `NODE_ENV`, `STRIPE_SECRET_KEY`, `STRIPE_PRICE_PRO_MONTHLY`, and all `TWITTER_*` keys.
+
+**3. After Railway gives you a URL, set up Stripe webhook:**
+- Go to https://dashboard.stripe.com/webhooks
+- Add endpoint: `https://YOUR-RAILWAY-URL/api/billing/webhook`
+- Select events: `checkout.session.completed`, `customer.subscription.*`
+- Copy the webhook signing secret → add to Railway as `STRIPE_WEBHOOK_SECRET`
+
+**4. Optional: Gmail for reports**
+- Go to https://myaccount.google.com/apppasswords
+- Generate app password → add to Railway as `GMAIL_APP_PASSWORD`
+
+---
+
 ## THE ONLY THINGS YOU MUST DO YOURSELF
 
 ### One-Time Setup (~30 minutes total)
