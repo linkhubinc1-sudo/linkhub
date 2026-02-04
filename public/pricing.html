@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <style>
     .pricing-container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 4rem 2rem;
     }
@@ -19,7 +19,9 @@
 
     .pricing-header h1 {
       font-size: 2.5rem;
+      font-weight: 800;
       margin-bottom: 1rem;
+      letter-spacing: -0.02em;
     }
 
     .pricing-header p {
@@ -27,24 +29,45 @@
       font-size: 1.125rem;
     }
 
+    .urgency-banner {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      margin-bottom: 2.5rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
     }
 
     .pricing-card {
-      background: var(--bg-card);
-      border-radius: 1rem;
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-xl);
       padding: 2rem;
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
+      transition: all 0.2s ease;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-light);
     }
 
     .pricing-card.featured {
       border-color: var(--primary);
       position: relative;
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.2);
     }
 
     .pricing-card.featured::before {
@@ -54,22 +77,43 @@
       left: 50%;
       transform: translateX(-50%);
       background: var(--gradient);
-      padding: 0.25rem 1rem;
-      border-radius: 1rem;
+      padding: 0.375rem 1rem;
+      border-radius: var(--radius-full);
       font-size: 0.75rem;
       font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .pricing-card.lifetime {
+      border-color: #ffa500;
+    }
+
+    .pricing-card.lifetime::before {
+      content: 'Best Value';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ff6b6b, #ffa500);
+      padding: 0.375rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
     .plan-name {
       font-size: 1.25rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
     }
 
     .plan-price {
       font-size: 3rem;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
     }
 
     .plan-price span {
@@ -81,6 +125,7 @@
     .plan-description {
       color: var(--text-muted);
       margin-bottom: 1.5rem;
+      font-size: 0.9375rem;
     }
 
     .plan-features {
@@ -90,51 +135,174 @@
     }
 
     .plan-features li {
-      padding: 0.5rem 0;
+      padding: 0.625rem 0;
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      font-size: 0.9375rem;
     }
 
     .plan-features li::before {
       content: '✓';
       color: var(--success);
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 0.875rem;
     }
 
     .plan-features li.disabled {
       color: var(--text-muted);
-      text-decoration: line-through;
     }
 
     .plan-features li.disabled::before {
-      content: '✗';
+      content: '—';
       color: var(--text-muted);
     }
 
+    .pricing-card .btn {
+      width: 100%;
+    }
+
+    .plan-note {
+      text-align: center;
+      margin-top: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
+    .plan-note a {
+      color: var(--primary-light);
+    }
+
+    .social-proof {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .social-proof h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .social-proof p {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+    }
+
+    .trust-section {
+      padding: 2.5rem;
+      background: var(--gradient-subtle);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      margin-bottom: 3rem;
+    }
+
+    .trust-section h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .trust-section > p {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-size: 0.9375rem;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .trust-item {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .trust-item .icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .trust-item h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .trust-item p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .trust-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
     .faq {
-      margin-top: 4rem;
+      margin-top: 3rem;
     }
 
     .faq h2 {
       text-align: center;
+      font-size: 1.75rem;
+      font-weight: 700;
       margin-bottom: 2rem;
+      letter-spacing: -0.01em;
     }
 
     .faq-item {
-      background: var(--bg-card);
-      border-radius: 0.5rem;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: var(--radius-lg);
       padding: 1.5rem;
       margin-bottom: 1rem;
       border: 1px solid var(--border);
     }
 
     .faq-item h3 {
+      font-size: 1rem;
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
 
     .faq-item p {
       color: var(--text-muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .pricing-container {
+        padding: 2rem 1rem;
+      }
+
+      .pricing-header h1 {
+        font-size: 1.75rem;
+      }
+
+      .plan-price {
+        font-size: 2.5rem;
+      }
+
+      .pricing-card {
+        padding: 1.5rem;
+      }
+
+      .trust-section {
+        padding: 1.5rem;
+      }
     }
   </style>
 </head>
@@ -150,15 +318,14 @@
   <div class="pricing-container">
     <div class="pricing-header">
       <h1>Simple, Transparent Pricing</h1>
-      <p>Start free, upgrade when you're ready to grow</p>
+      <p>Start free, upgrade when you're ready</p>
     </div>
 
-    <!-- Urgency Banner -->
-    <div style="background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white; padding: 1rem; border-radius: 0.5rem; text-align: center; margin-bottom: 2rem; font-weight: 600;">
-      🔥 LIMITED: Lifetime deal available - Pay once, use forever. Only 47 spots left.
+    <div class="urgency-banner">
+      Limited: Lifetime deal available — Pay once, use forever
     </div>
 
-    <div class="pricing-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+    <div class="pricing-grid">
       <!-- Free Plan -->
       <div class="pricing-card">
         <div class="plan-name">Free</div>
@@ -170,8 +337,8 @@
           <li>Basic analytics (7 days)</li>
           <li>5 color themes</li>
           <li>Mobile-responsive page</li>
-          <li class="disabled">Custom domain</li>
-          <li class="disabled">Remove LinkHub branding</li>
+          <li class="disabled">Remove branding</li>
+          <li class="disabled">Premium themes</li>
           <li class="disabled">Priority support</li>
         </ul>
 
@@ -186,77 +353,69 @@
 
         <ul class="plan-features">
           <li>Everything in Free</li>
-          <li>Custom domain support</li>
           <li>Remove LinkHub branding</li>
           <li>Advanced analytics (forever)</li>
           <li>20+ premium themes</li>
+          <li>Custom domain support</li>
           <li>Email capture widget</li>
           <li>Priority support</li>
         </ul>
 
         <button class="btn btn-primary" onclick="upgradeToPro('monthly')">Upgrade to Pro</button>
-        <p style="text-align: center; margin-top: 0.75rem; color: var(--text-muted); font-size: 0.875rem;">
-          or <a href="#" onclick="upgradeToPro('yearly'); return false;">$48/year (save 20%)</a>
-        </p>
+        <p class="plan-note">or <a href="#" onclick="upgradeToPro('yearly'); return false;">$48/year (save 20%)</a></p>
       </div>
 
       <!-- Lifetime Plan -->
-      <div class="pricing-card" style="border-color: #ffa500;">
-        <div style="background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white; padding: 0.25rem 1rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-bottom: 0.5rem;">Best Value</div>
+      <div class="pricing-card lifetime">
         <div class="plan-name">Lifetime</div>
         <div class="plan-price">$49 <span>one-time</span></div>
         <p class="plan-description">Pay once, own forever</p>
 
         <ul class="plan-features">
           <li>Everything in Pro</li>
-          <li>Lifetime access (no renewals)</li>
-          <li>All future updates included</li>
+          <li>Lifetime access</li>
+          <li>All future updates</li>
           <li>VIP support forever</li>
-          <li>Early access to new features</li>
+          <li>Early access to features</li>
           <li>Founder badge on profile</li>
+          <li>No recurring charges</li>
         </ul>
 
         <button class="btn btn-primary" style="background: linear-gradient(135deg, #ff6b6b, #ffa500);" onclick="upgradeToPro('lifetime')">Get Lifetime Access</button>
-        <p style="text-align: center; margin-top: 0.75rem; color: var(--text-muted); font-size: 0.875rem;">
-          <s>$99</s> → $49 (50% off)
-        </p>
+        <p class="plan-note"><s>$99</s> → $49 (50% off)</p>
       </div>
     </div>
 
-    <!-- Social Proof -->
-    <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-card); border-radius: 0.5rem; border: 1px solid var(--border);">
-      <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Trusted by 2,500+ creators</p>
-      <p style="color: var(--text-muted);">"Finally ditched Linktree. LinkHub does everything I need for free." - @sarahcreates</p>
+    <div class="social-proof">
+      <h3>Trusted by 2,500+ creators</h3>
+      <p>"Finally ditched Linktree. LinkHub does everything I need for free." — @sarahcreates</p>
     </div>
 
-    <!-- Trust / No Hidden Fees Section -->
-    <div style="margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 1rem; border: 1px solid var(--border);">
-      <h2 style="text-align: center; margin-bottom: 0.5rem;">What We DON'T Do</h2>
-      <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Unlike other link-in-bio tools, we actually respect creators.</p>
+    <div class="trust-section">
+      <h2>What We Don't Do</h2>
+      <p>Unlike other link-in-bio tools, we actually respect creators.</p>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-        <div style="text-align: center; padding: 1rem;">
-          <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
-          <h3 style="margin-bottom: 0.5rem;">Zero Transaction Fees</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Sell products through your links. We take 0%. Your money is YOUR money.</p>
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="icon">💰</div>
+          <h3>Zero Transaction Fees</h3>
+          <p>Sell products through your links. We take 0%. Your money is your money.</p>
         </div>
 
-        <div style="text-align: center; padding: 1rem;">
-          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔗</div>
-          <h3 style="margin-bottom: 0.5rem;">No Affiliate Hijacking</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">We never inject our affiliate codes into your links. Your commissions stay yours.</p>
+        <div class="trust-item">
+          <div class="icon">🔗</div>
+          <h3>No Affiliate Hijacking</h3>
+          <p>We never inject our affiliate codes into your links. Your commissions stay yours.</p>
         </div>
 
-        <div style="text-align: center; padding: 1rem;">
-          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔒</div>
-          <h3 style="margin-bottom: 0.5rem;">No Data Selling</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Your audience data is never sold, shared, or used for ads. Period.</p>
+        <div class="trust-item">
+          <div class="icon">🔒</div>
+          <h3>No Data Selling</h3>
+          <p>Your audience data is never sold, shared, or used for ads. Period.</p>
         </div>
       </div>
 
-      <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.875rem;">
-        We make money from optional Pro upgrades. That's it. You're the customer, not the product.
-      </p>
+      <p class="trust-footer">We make money from optional Pro upgrades. That's it. You're the customer, not the product.</p>
     </div>
 
     <div class="faq">
@@ -286,7 +445,6 @@
 
   <script>
     async function upgradeToPro(priceType) {
-      // Check if logged in first
       try {
         const authRes = await fetch('/api/auth/me');
         if (!authRes.ok) {

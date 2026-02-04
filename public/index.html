@@ -4,46 +4,238 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LinkHub - One Link for Everything | Free Link in Bio Tool</title>
-  <meta name="description" content="Create a beautiful link-in-bio page in seconds. Share all your social profiles, content, and links in one place. Free forever, upgrade for more features.">
-  <meta name="keywords" content="link in bio, linktree alternative, bio link, social media links, creator tools, influencer links">
-  <meta name="author" content="LinkHub">
-  <link rel="canonical" href="https://linkhub-app.fly.dev/">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://linkhub-app.fly.dev/">
-  <meta property="og:title" content="LinkHub - One Link for Everything">
-  <meta property="og:description" content="Create a beautiful link-in-bio page in seconds. Free forever.">
-  <meta property="og:image" content="/og-image.png">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://linkhub-app.fly.dev/">
-  <meta property="twitter:title" content="LinkHub - One Link for Everything">
-  <meta property="twitter:description" content="Create a beautiful link-in-bio page in seconds. Free forever.">
-  <meta property="twitter:image" content="/og-image.png">
-
+  <meta name="description" content="Create a beautiful link-in-bio page in seconds. Share all your social profiles, content, and links in one place. Free forever.">
+  <meta name="keywords" content="link in bio, linktree alternative, bio link, social media links, creator tools">
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    .trust-badges { display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; opacity: 0.7; flex-wrap: wrap; }
-    .trust-badges span { font-size: 0.9rem; color: var(--text-muted); }
-    .stats-row { display: flex; gap: 3rem; justify-content: center; margin: 3rem 0; flex-wrap: wrap; }
+    .badge {
+      display: inline-block;
+      background: var(--gradient-subtle);
+      color: var(--primary-light);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .trust-badges {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .trust-badges span {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .trust-badges span::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 4rem;
+      justify-content: center;
+      margin: 5rem 0;
+      flex-wrap: wrap;
+      padding: 0 2rem;
+    }
     .stat-item { text-align: center; }
-    .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
-    .stat-label { color: var(--text-muted); font-size: 0.9rem; }
-    .testimonials { padding: 4rem 2rem; background: rgba(255,255,255,0.02); }
-    .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
-    .testimonial { background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); }
-    .testimonial-text { font-style: italic; margin-bottom: 1rem; color: var(--text); }
-    .testimonial-author { color: var(--text-muted); font-size: 0.9rem; }
-    .cta-section { padding: 4rem 2rem; text-align: center; }
-    .cta-section h2 { font-size: 2rem; margin-bottom: 1rem; }
-    .footer { padding: 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem; }
-    .comparison { max-width: 600px; margin: 3rem auto; }
-    .comparison-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    .features-section {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .features-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .features-section > p {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      transition: all 0.2s ease;
+    }
+    .feature-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-2px);
+    }
+    .feature-card h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    .comparison-section {
+      padding: 5rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .comparison-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.02em;
+    }
+    .comparison {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
     .comparison-row:last-child { border-bottom: none; }
-    .check { color: #22c55e; }
-    .x { color: #ef4444; }
+    .comparison-row.header {
+      background: rgba(0, 0, 0, 0.2);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .comparison-row span:not(:first-child) {
+      text-align: center;
+    }
+    .check { color: var(--success); font-weight: 600; }
+    .x { color: var(--danger); }
+
+    .testimonials {
+      padding: 5rem 2rem;
+      background: var(--gradient-subtle);
+    }
+    .testimonials h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.02em;
+    }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .testimonial {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 1.75rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+    .testimonial-text {
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .testimonial-author {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .cta-section {
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .cta-section p {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-size: 1.125rem;
+    }
+
+    .footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .footer-links {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover {
+      color: var(--primary-light);
+    }
+
+    @media (max-width: 768px) {
+      .stats-row { gap: 2rem; margin: 3rem 0; }
+      .stat-number { font-size: 2rem; }
+      .features-section, .comparison-section, .cta-section { padding: 3rem 1rem; }
+      .comparison-row { padding: 0.875rem 1rem; font-size: 0.875rem; }
+      .cta-section h2 { font-size: 1.75rem; }
+    }
   </style>
 </head>
 <body>
@@ -51,27 +243,27 @@
     <nav class="nav">
       <div class="logo">LinkHub</div>
       <div class="nav-links">
-        <a href="/pricing.html" style="color: var(--text-muted); text-decoration: none; margin-right: 1rem;">Pricing</a>
+        <a href="/pricing.html" style="color: var(--text-muted); margin-right: 0.5rem;">Pricing</a>
         <a href="/login" class="btn btn-secondary btn-small">Log In</a>
         <a href="/register" class="btn btn-primary btn-small">Sign Up Free</a>
       </div>
     </nav>
 
     <main class="hero">
-      <div style="display: inline-block; background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1rem;">No credit card required</div>
+      <div class="badge">No credit card required</div>
       <h1>One Link for <span>Everything</span></h1>
       <p>
         The free Linktree alternative trusted by creators. Share all your content,
         social profiles, and links in one beautiful page.
       </p>
       <div class="hero-cta">
-        <a href="/register" class="btn btn-primary">Create Your Free Page</a>
+        <a href="/register" class="btn btn-primary btn-large">Create Your Free Page</a>
       </div>
       <div class="trust-badges">
-        <span>100% Free Forever</span>
+        <span>Free Forever</span>
         <span>No Ads</span>
         <span>Unlimited Links</span>
-        <span>Custom Themes</span>
+        <span>Analytics Included</span>
       </div>
     </main>
 
@@ -90,40 +282,41 @@
       </div>
     </div>
 
-    <section id="features" style="padding: 4rem 2rem; max-width: 1000px; margin: 0 auto;">
-      <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.75rem;">Everything You Need, Nothing You Don't</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
-        <div class="stat-card">
-          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Unlimited Links</h3>
-          <p style="color: var(--text-muted);">Add as many links as you want. Social profiles, websites, stores - all in one place.</p>
+    <section class="features-section">
+      <h2>Everything You Need</h2>
+      <p>Simple, powerful features to help you share your content and grow your audience.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Unlimited Links</h3>
+          <p>Add as many links as you want. Social profiles, websites, stores, videos - all in one place.</p>
         </div>
-        <div class="stat-card">
-          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Click Analytics</h3>
-          <p style="color: var(--text-muted);">Track every click. See what's working and optimize your content strategy.</p>
+        <div class="feature-card">
+          <h3>Click Analytics</h3>
+          <p>Track every click in real-time. See what's working and optimize your content strategy.</p>
         </div>
-        <div class="stat-card">
-          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Beautiful Themes</h3>
-          <p style="color: var(--text-muted);">Choose from multiple themes to match your personal brand and style.</p>
+        <div class="feature-card">
+          <h3>Beautiful Themes</h3>
+          <p>Choose from multiple themes to match your brand. Customize colors and style to stand out.</p>
         </div>
-        <div class="stat-card">
-          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Mobile Optimized</h3>
-          <p style="color: var(--text-muted);">Looks perfect on every device. Your audience is on mobile - we get it.</p>
+        <div class="feature-card">
+          <h3>Mobile First</h3>
+          <p>Perfectly optimized for mobile devices. Your audience is on mobile - we designed for that.</p>
         </div>
-        <div class="stat-card">
-          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">Fast & Reliable</h3>
-          <p style="color: var(--text-muted);">99.9% uptime. Your page loads instantly, every time.</p>
+        <div class="feature-card">
+          <h3>Lightning Fast</h3>
+          <p>99.9% uptime with global CDN. Your page loads instantly, every time, everywhere.</p>
         </div>
-        <div class="stat-card">
-          <h3 style="font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem;">SEO Friendly</h3>
-          <p style="color: var(--text-muted);">Get discovered. Your LinkHub page is optimized for search engines.</p>
+        <div class="feature-card">
+          <h3>SEO Optimized</h3>
+          <p>Get discovered on Google. Your LinkHub page is optimized for search engines.</p>
         </div>
       </div>
     </section>
 
-    <section style="padding: 4rem 2rem; max-width: 800px; margin: 0 auto;">
-      <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.75rem;">Why Pay for Linktree?</h2>
+    <section class="comparison-section">
+      <h2>Why Switch to LinkHub?</h2>
       <div class="comparison">
-        <div class="comparison-row" style="font-weight: 600; border-bottom: 2px solid var(--border);">
+        <div class="comparison-row header">
           <span>Feature</span>
           <span>Linktree</span>
           <span>LinkHub</span>
@@ -134,7 +327,7 @@
           <span class="check">Free</span>
         </div>
         <div class="comparison-row">
-          <span>Analytics</span>
+          <span>Click Analytics</span>
           <span class="x">Paid</span>
           <span class="check">Free</span>
         </div>
@@ -144,12 +337,12 @@
           <span class="check">Free</span>
         </div>
         <div class="comparison-row">
-          <span>Remove Branding</span>
-          <span class="x">$5/mo</span>
-          <span class="check">$5/mo</span>
+          <span>No Ads</span>
+          <span class="x">Paid</span>
+          <span class="check">Free</span>
         </div>
         <div class="comparison-row">
-          <span style="font-weight: 600;">Price</span>
+          <span style="font-weight: 600;">Starting Price</span>
           <span class="x">$5-24/mo</span>
           <span class="check" style="font-weight: 600;">$0</span>
         </div>
@@ -157,32 +350,36 @@
     </section>
 
     <section class="testimonials">
-      <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.75rem;">Loved by Creators</h2>
+      <h2>Loved by Creators</h2>
       <div class="testimonial-grid">
         <div class="testimonial">
-          <p class="testimonial-text">"Finally ditched Linktree. LinkHub has everything I need and it's actually free."</p>
-          <p class="testimonial-author">- Sarah K., Content Creator</p>
+          <p class="testimonial-text">"Finally ditched Linktree. LinkHub has everything I need and it's actually free. The analytics are amazing."</p>
+          <p class="testimonial-author">Sarah K. — Content Creator</p>
         </div>
         <div class="testimonial">
-          <p class="testimonial-text">"The analytics alone are worth it. Can't believe this is free."</p>
-          <p class="testimonial-author">- Marcus T., Photographer</p>
+          <p class="testimonial-text">"Clean, fast, and professional. Set it up in 2 minutes and my followers love it. Highly recommend."</p>
+          <p class="testimonial-author">Marcus T. — Photographer</p>
         </div>
         <div class="testimonial">
-          <p class="testimonial-text">"Clean, fast, and professional. My followers love it."</p>
-          <p class="testimonial-author">- Jenna M., Influencer</p>
+          <p class="testimonial-text">"I was paying $24/month for Linktree Pro. Switched to LinkHub and got the same features for free."</p>
+          <p class="testimonial-author">Jenna M. — Influencer</p>
         </div>
       </div>
     </section>
 
     <section class="cta-section">
-      <h2>Ready to Level Up Your Links?</h2>
-      <p style="color: var(--text-muted); margin-bottom: 2rem;">Join thousands of creators using LinkHub. It takes 30 seconds.</p>
-      <a href="/register" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">Create Your Free Page</a>
+      <h2>Ready to Get Started?</h2>
+      <p>Join thousands of creators using LinkHub. It takes 30 seconds to set up.</p>
+      <a href="/register" class="btn btn-primary btn-large">Create Your Free Page</a>
     </section>
 
     <footer class="footer">
-      <p>LinkHub - The free link-in-bio tool for creators</p>
-      <p style="margin-top: 0.5rem;"><a href="/pricing.html" style="color: var(--primary);">Pricing</a> | <a href="https://twitter.com/LinkHubInc" style="color: var(--primary);">Twitter</a></p>
+      <p>LinkHub — The free link-in-bio tool for creators</p>
+      <div class="footer-links">
+        <a href="/pricing.html">Pricing</a>
+        <a href="https://twitter.com/LinkHubInc">Twitter</a>
+        <a href="mailto:hello@linkhub.app">Contact</a>
+      </div>
     </footer>
   </div>
 
@@ -197,7 +394,6 @@
     const ref = urlParams.get('ref');
     if (ref) {
       sessionStorage.setItem('referralCode', ref);
-      // Update signup links to include referral
       document.querySelectorAll('a[href="/register"]').forEach(link => {
         link.href = `/register?ref=${ref}`;
       });
