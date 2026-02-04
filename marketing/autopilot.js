@@ -68,6 +68,27 @@ const tweetTemplates = [
   `Why are you still paying for Linktree?\n\nSerious question. I want to know.\n\nBecause this exists for free: ${CONFIG.productUrl}`,
 
   `What does Linktree give you for $24/month that you can't get free?\n\nI'll wait.\n\n${CONFIG.productUrl}`,
+
+  // No fees / No data selling / Trust
+  `Most link-in-bio tools:\n\n• Take a cut of your sales\n• Inject their affiliate codes\n• Sell your data\n\nLinkHub does NONE of that.\n\nYour links. Your money. Your data.\n\n${CONFIG.productUrl}`,
+
+  `Linktree makes money by:\n1. Charging you $24/month\n2. Taking cuts from your commerce\n3. Selling your audience data\n\nWe make money by:\n1. Optional $5/month upgrade\n\nThat's it. We don't touch your revenue.\n\n${CONFIG.productUrl}`,
+
+  `PSA: Some link-in-bio tools inject their own affiliate codes into YOUR links.\n\nYou promote Amazon products. They get the commission.\n\nWe don't do that. Ever.\n\n${CONFIG.productUrl}`,
+
+  `Your audience data is YOURS.\n\nWe don't sell it.\nWe don't share it.\nWe don't use it for ads.\n\nUnlike some link-in-bio tools that treat your audience as their product.\n\n${CONFIG.productUrl}`,
+
+  `The link-in-bio business model is broken:\n\n"Pay us monthly AND we'll take a cut of your sales AND sell your data"\n\nOur model: You pay $5/month if you want. That's it.\n\nNo cuts. No data selling. No BS.\n\n${CONFIG.productUrl}`,
+
+  `You sell a $50 product through your link.\n\nOther platforms: Take 3-5% ($1.50-$2.50)\nLinkHub: Take $0\n\nYour money is your money.\n\n${CONFIG.productUrl}`,
+
+  `I refuse to build a tool that profits off creators' hard work.\n\nNo transaction fees.\nNo affiliate hijacking.\nNo data mining.\n\nJust a link page. That's it.\n\n${CONFIG.productUrl}`,
+
+  `"Free" link tools that sell your data aren't free.\n\nYOU are the product.\n\nLinkHub is actually free. We make money from optional upgrades, not your personal information.\n\n${CONFIG.productUrl}`,
+
+  `Every click on your LinkHub page = money in YOUR pocket, not ours.\n\nWe don't skim transactions.\nWe don't inject affiliates.\nWe don't sell leads.\n\n${CONFIG.productUrl}`,
+
+  `Creator-first means:\n\n✓ 0% transaction fees\n✓ No affiliate injection\n✓ No data selling\n✓ No forced branding\n✓ Your audience stays yours\n\nRadical concept, apparently.\n\n${CONFIG.productUrl}`,
 ];
 
 const redditPosts = [
