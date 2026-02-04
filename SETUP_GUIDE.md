@@ -6,33 +6,26 @@ This guide is for people who want to do the absolute minimum work.
 
 ## CURRENT STATUS (Last updated: Feb 3, 2026)
 
-### ✅ COMPLETED
+### ✅ DEPLOYED AND LIVE
 - [x] Code pushed to GitHub: https://github.com/linkhubinc1-sudo/linkhub
 - [x] Twitter API keys configured
-- [x] Stripe account created (test mode)
-- [x] Stripe monthly price ID set (`price_1SvqOdGURQ9dmmIltzjd8Jxu`)
+- [x] Stripe LIVE mode activated
+- [x] Deployed to Railway: https://linkhub-production-4cad.up.railway.app
+- [x] Stripe webhook configured
+- [x] Live price ID: `price_1SwyYNGUf1dWS4D8BwHm2Ynd`
 
-### ⏳ REMAINING (You must do these manually)
+### ⏳ FINAL STEP: Add these to Railway Variables
+Make sure these are set in Railway dashboard → Variables:
+- `NODE_ENV` = production
+- `JWT_SECRET` = (generate something secure)
+- `STRIPE_SECRET_KEY` = sk_live_... (your live key)
+- `STRIPE_WEBHOOK_SECRET` = whsec_YfNQGtxqCPKWTynSSyaMjqsbnKMbAcpR
+- `STRIPE_PRICE_PRO_MONTHLY` = price_1SwyYNGUf1dWS4D8BwHm2Ynd
+- All `TWITTER_*` keys from .env
 
-**1. Login to Railway and deploy (5 min)**
-```
-railway login
-```
-Then in browser: https://railway.app → New Project → Deploy from GitHub → select linkhub
-
-**2. Set Railway environment variables:**
-Copy all values from your local `.env` file into Railway's environment variables panel.
-Required vars: `JWT_SECRET`, `NODE_ENV`, `STRIPE_SECRET_KEY`, `STRIPE_PRICE_PRO_MONTHLY`, and all `TWITTER_*` keys.
-
-**3. After Railway gives you a URL, set up Stripe webhook:**
-- Go to https://dashboard.stripe.com/webhooks
-- Add endpoint: `https://YOUR-RAILWAY-URL/api/billing/webhook`
-- Select events: `checkout.session.completed`, `customer.subscription.*`
-- Copy the webhook signing secret → add to Railway as `STRIPE_WEBHOOK_SECRET`
-
-**4. Optional: Gmail for reports**
-- Go to https://myaccount.google.com/apppasswords
-- Generate app password → add to Railway as `GMAIL_APP_PASSWORD`
+### Optional
+- [ ] Gmail app password for email reports
+- [ ] Custom domain
 
 ---
 
