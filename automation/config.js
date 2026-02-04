@@ -35,7 +35,7 @@ module.exports = {
   // Your app
   app: {
     name: 'LinkHub',
-    url: process.env.APP_URL || 'https://linkhub-app.fly.dev',
+    url: process.env.APP_URL || 'https://linkhub-production-4cad.up.railway.app',
     adminEmail: process.env.ADMIN_EMAIL || 'linkhubinc1@gmail.com',
   },
 

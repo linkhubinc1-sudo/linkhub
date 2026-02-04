@@ -8,23 +8,48 @@ const config = require('./config');
 const fs = require('fs');
 const path = require('path');
 
-// Tweet content library
+// Tweet content library - AGGRESSIVE VERSION
 const tweets = [
-  `Most link-in-bio tools charge $5-20/month for basic features.\n\nI built one that's free. Forever.\n\nNo catch. No "upgrade to unlock."\n\n${config.app.url}`,
-  `POV: You stop paying for Linktree\n\nHere's a free alternative I made 👇\n${config.app.url}`,
-  `Creators: You don't need to pay for a link-in-bio tool.\n\nI built a free one with:\n• Unlimited links\n• Click analytics\n• Custom themes\n• No branding\n\n${config.app.url}`,
-  `I was mass about paying $9/mo just to have multiple links in my bio.\n\nSo I built my own. It's free.\n\n${config.app.url}`,
-  `Just shipped: A Linktree alternative that's actually free.\n\nNo waitlist. No tricks. Just use it.\n\n${config.app.url}`,
-  `Your link-in-bio shouldn't cost more than your Netflix subscription.\n\nMine is free: ${config.app.url}`,
-  `The link-in-bio space is wild.\n\nCompanies charging $20/mo for what's essentially a list of links.\n\nI made a free version: ${config.app.url}`,
-  `New creators: Don't pay for Linktree.\n\nUse my free alternative until you're making money.\n\nThen still use it because it's free lol\n\n${config.app.url}`,
-  `Building in public update:\n\nLaunched my link-in-bio tool.\n\nFree tier: Unlimited everything\nPro tier: $5/mo for custom domain\n\nNo VC money. No growth hacks. Just a useful tool.\n\n${config.app.url}`,
-  `If you're a creator with < 10k followers, you don't need to pay for link tools.\n\nHere's a free one I made for you: ${config.app.url}`,
-  `Unpopular opinion: Most "link in bio" tools are overpriced.\n\nSo I built a free one.\n\n${config.app.url}`,
-  `Why I stopped using Linktree:\n\n• $9/mo for basic analytics\n• $24/mo for custom domains\n• Felt like a scam\n\nBuilt my own. Made it free.\n\n${config.app.url}`,
-  `Every creator needs a link-in-bio.\n\nNot every creator needs to pay $10/mo for one.\n\nFree alternative: ${config.app.url}`,
-  `Started charging $0/month for a link-in-bio tool.\n\nBusiness is booming.\n\n${config.app.url}`,
-  `The best part about my link-in-bio tool?\n\nIt costs $0.\n\nThe second best part?\n\nIt actually works.\n\n${config.app.url}`,
+  // Controversial / Hot takes
+  `Linktree is a scam.\n\nThey charge $24/month for something that should be free.\n\nI built the free version: ${config.app.url}`,
+  `Unpopular opinion: If you're paying for Linktree in 2026, you're getting robbed.\n\nSwitch to something free: ${config.app.url}`,
+  `Linktree made $100M+ charging creators for HYPERLINKS.\n\nLet that sink in.\n\nHere's the free alternative: ${config.app.url}`,
+  `Stop giving Linktree your money.\n\nSeriously. It's a page with links. Why are you paying $24/month?\n\nFree alternative: ${config.app.url}`,
+
+  // FOMO / Urgency
+  `1,247 creators switched from Linktree this week.\n\nThey're saving $288/year.\n\nYou next? ${config.app.url}`,
+  `Every day you pay for Linktree is money you'll never get back.\n\nSwitch now. It takes 2 minutes.\n\n${config.app.url}`,
+  `Your competitors are using free tools and pocketing the savings.\n\nYou're still paying Linktree $24/month.\n\nFix that: ${config.app.url}`,
+
+  // Direct callouts
+  `If you have Linktree in your bio right now:\n\n1. You're overpaying\n2. Your page loads slower\n3. You're giving them free advertising\n\nSwitch: ${config.app.url}`,
+  `POV: You realize Linktree has been charging you $288/year for a list of links\n\nFree alternative that does everything: ${config.app.url}`,
+  `Creators making under $10k/month should NOT be paying for:\n\n- Link in bio tools\n- Email tools\n- Website builders\n\nStart here (free): ${config.app.url}`,
+
+  // Rage bait
+  `Linktree raised $165M to... host links?\n\nAnd you're paying them monthly for it?\n\nNah. Free version here: ${config.app.url}`,
+  `The fact that "link in bio" is a $1B industry is INSANE.\n\nIt's literally just links.\n\nStop paying. Use this: ${config.app.url}`,
+
+  // Short punchy
+  `Linktree: $24/month\nLinkHub: $0/forever\n\nSame features.\n\n${config.app.url}`,
+  `Delete Linktree.\nUse this instead.\nKeep your $288/year.\n\n${config.app.url}`,
+  `Free > $24/month\n\nLinkHub > Linktree\n\nSimple math: ${config.app.url}`,
+
+  // Question hooks
+  `Why are you still paying for Linktree?\n\nSerious question. I want to know.\n\nBecause this exists for free: ${config.app.url}`,
+  `What does Linktree give you for $24/month that you can't get free?\n\nI'll wait.\n\n${config.app.url}`,
+
+  // No fees / No data selling / Trust
+  `Most link-in-bio tools:\n\n• Take a cut of your sales\n• Inject their affiliate codes\n• Sell your data\n\nLinkHub does NONE of that.\n\nYour links. Your money. Your data.\n\n${config.app.url}`,
+  `Linktree makes money by:\n1. Charging you $24/month\n2. Taking cuts from your commerce\n3. Selling your audience data\n\nWe make money by:\n1. Optional $5/month upgrade\n\nThat's it. We don't touch your revenue.\n\n${config.app.url}`,
+  `PSA: Some link-in-bio tools inject their own affiliate codes into YOUR links.\n\nYou promote Amazon products. They get the commission.\n\nWe don't do that. Ever.\n\n${config.app.url}`,
+  `Your audience data is YOURS.\n\nWe don't sell it.\nWe don't share it.\nWe don't use it for ads.\n\nUnlike some link-in-bio tools that treat your audience as their product.\n\n${config.app.url}`,
+  `The link-in-bio business model is broken:\n\n"Pay us monthly AND we'll take a cut of your sales AND sell your data"\n\nOur model: You pay $5/month if you want. That's it.\n\nNo cuts. No data selling. No BS.\n\n${config.app.url}`,
+  `You sell a $50 product through your link.\n\nOther platforms: Take 3-5% ($1.50-$2.50)\nLinkHub: Take $0\n\nYour money is your money.\n\n${config.app.url}`,
+  `I refuse to build a tool that profits off creators' hard work.\n\nNo transaction fees.\nNo affiliate hijacking.\nNo data mining.\n\nJust a link page. That's it.\n\n${config.app.url}`,
+  `"Free" link tools that sell your data aren't free.\n\nYOU are the product.\n\nLinkHub is actually free. We make money from optional upgrades, not your personal information.\n\n${config.app.url}`,
+  `Every click on your LinkHub page = money in YOUR pocket, not ours.\n\nWe don't skim transactions.\nWe don't inject affiliates.\nWe don't sell leads.\n\n${config.app.url}`,
+  `Creator-first means:\n\n✓ 0% transaction fees\n✓ No affiliate injection\n✓ No data selling\n✓ No forced branding\n✓ Your audience stays yours\n\nRadical concept, apparently.\n\n${config.app.url}`,
 ];
 
 // Track what we've posted to avoid duplicates
