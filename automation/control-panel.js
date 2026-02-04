@@ -81,16 +81,23 @@ app.get('/api/leads', (req, res) => {
 });
 
 app.post('/api/action/tweet', async (req, res) => {
-  const { postTweet, getNextTweet } = require('./twitter-bot');
+  const { postTweet } = require('./twitter-browser');
+  const { getNextTweet } = require('./twitter-bot');
   const text = req.body.text || getNextTweet();
   const result = await postTweet(text);
-  if (result) {
+  if (result && result.success) {
     automationStatus.lastTweet = new Date().toISOString();
     automationStatus.tweetsPosted++;
     res.json({ success: true, tweet: text });
   } else {
-    res.json({ success: false, error: 'Failed to post tweet' });
+    res.json({ success: false, error: result?.error || 'Failed to post tweet' });
   }
+});
+
+app.post('/api/twitter/login', async (req, res) => {
+  const { loginManually } = require('./twitter-browser');
+  loginManually();
+  res.json({ status: 'Browser opened. Log in to Twitter, then close the browser.' });
 });
 
 app.post('/api/action/dm', async (req, res) => {
@@ -263,6 +270,7 @@ app.get('/', (req, res) => {
     </div>
 
     <div class="actions">
+      <button onclick="twitterLogin()" class="danger">🔐 Login to X (First Time)</button>
       <button onclick="postAutoTweet()" class="success">🐦 Post Tweet</button>
       <button onclick="findLeads()">🔍 Find 20 Leads</button>
       <button onclick="sendBulkDMs()">📨 Send 10 DMs</button>
@@ -392,6 +400,12 @@ app.get('/', (req, res) => {
       const log = document.getElementById('activity-log');
       const time = new Date().toLocaleTimeString();
       log.innerHTML = \`<div class="log-entry">[\${time}] \${message}</div>\` + log.innerHTML;
+    }
+
+    async function twitterLogin() {
+      addLog('Opening browser for X login...');
+      addLog('👉 Log in to X in the browser, then CLOSE the browser window');
+      await fetch('/api/twitter/login', { method: 'POST' });
     }
 
     async function postAutoTweet() {
