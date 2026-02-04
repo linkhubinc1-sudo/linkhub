@@ -494,7 +494,6 @@ function openReferralModal() {
 
   document.getElementById('referralLinkInput').value = referralData.link;
   document.getElementById('modalReferralCount').textContent = referralData.totalReferrals;
-  document.getElementById('modalEarnings').textContent = `$${referralData.earnings}`;
 
   document.getElementById('referralModal').classList.add('active');
 }

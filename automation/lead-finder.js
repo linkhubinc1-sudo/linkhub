@@ -1,113 +1,42 @@
 #!/usr/bin/env node
 /**
- * Lead Finder - Aggressive Marketing
- * Finds creators who need a link-in-bio tool and generates personalized outreach
+ * Lead Finder - Browser-based (FREE, no API needed)
+ * Finds creators who need a link-in-bio tool
  *
  * Usage:
  *   node lead-finder.js                    Find 20 leads
  *   node lead-finder.js --count 50         Find 50 leads
  *   node lead-finder.js --niche fitness    Find fitness creators
- *   node lead-finder.js --export           Export to CSV
  */
 
-const { TwitterApi } = require('twitter-api-v2');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
-const config = require('./config');
 
-// Target criteria
+// Browser profile for persistence
+const USER_DATA_DIR = path.join(__dirname, '.browser-profile');
+
+// Search queries
 const SEARCH_QUERIES = [
-  // People using Linktree (potential switchers)
-  'linktree filter:links',
-  '"linktr.ee" -is:retweet',
-
-  // People complaining about link-in-bio tools
-  '"linktree" expensive',
-  '"linktree" "too much"',
-  '"link in bio" frustrated',
-  '"need a better" "link in bio"',
-
-  // Creators who need link tools
-  '"check my bio" -is:retweet',
+  'linktree alternative',
   '"link in bio" creator',
-  '"links in bio"',
-
-  // Specific niches (high conversion)
-  '"small business" "link in bio"',
+  'linktree expensive',
+  '"need a" "link in bio"',
+  '"check my bio" -is:retweet',
+  'small business "link in bio"',
   'artist "link in bio"',
-  'musician "link in bio"',
-  '"content creator" linktree',
-  'coach "link in bio"',
-  '"etsy shop" "link in bio"',
-  'photographer portfolio link',
+  'content creator linktree',
 ];
 
 const NICHE_QUERIES = {
-  fitness: [
-    'fitness coach "link in bio"',
-    'personal trainer linktree',
-    '"fitness journey" "check bio"',
-    'gym "link in bio"',
-  ],
-  art: [
-    'artist commissions "link in bio"',
-    'illustrator linktree',
-    '"art prints" "link in bio"',
-    'digital artist portfolio',
-  ],
-  music: [
-    'musician "link in bio"',
-    'producer linktree',
-    '"new song" "link in bio"',
-    'singer spotify "bio"',
-  ],
-  business: [
-    'entrepreneur "link in bio"',
-    '"small business" linktree',
-    'founder "check bio"',
-    'startup "link in bio"',
-  ],
-  coaching: [
-    'life coach "link in bio"',
-    'business coach linktree',
-    'mentor "book a call" bio',
-    'consultant "link in bio"',
-  ],
-  ecommerce: [
-    '"etsy shop" "link in bio"',
-    'shopify "link in bio"',
-    '"shop now" "link in bio"',
-    'handmade "check bio"',
-  ],
-};
-
-// Message templates based on lead type
-const MESSAGE_TEMPLATES = {
-  linktree_user: {
-    opener: "Hey! Saw you're using Linktree",
-    pitch: "I built a free alternative with unlimited links + analytics. No monthly fees ever.",
-    cta: "Would you be down to try it? I'll personally help you set it up in 2 min.",
-  },
-  complainer: {
-    opener: "Saw your tweet about link-in-bio tools",
-    pitch: "I felt the same way so I built my own - completely free, no catch.",
-    cta: "Want me to send you the link? Happy to help migrate your stuff over.",
-  },
-  creator_generic: {
-    opener: "Love your content!",
-    pitch: "Quick Q - I made a free link-in-bio tool for creators. Better than Linktree, $0/month.",
-    cta: "Would you try it out and give me feedback? Takes 30 seconds to set up.",
-  },
-  small_follower: {
-    opener: "Hey! Your content deserves more reach",
-    pitch: "I built a free link-in-bio tool specifically for growing creators. No fees until you're making money (and even then it's free lol)",
-    cta: "Want to check it out?",
-  },
+  fitness: ['fitness coach "link in bio"', 'personal trainer linktree'],
+  art: ['artist commissions "link in bio"', 'illustrator portfolio'],
+  music: ['musician "link in bio"', 'producer linktree'],
+  business: ['entrepreneur "link in bio"', 'small business linktree'],
 };
 
 // Leads storage
 const leadsFile = path.join(__dirname, 'leads.json');
-const exportDir = path.join(__dirname, 'exports');
 
 function getLeads() {
   try {
@@ -124,171 +53,151 @@ function saveLeads(leads) {
 async function findLeads(options = {}) {
   const { count = 20, niche = null } = options;
 
-  if (!config.twitter.bearerToken) {
-    console.log('❌ Twitter API not configured. Add TWITTER_BEARER_TOKEN to .env');
-    console.log('\nTo get leads manually, search Twitter for:');
-    SEARCH_QUERIES.slice(0, 5).forEach(q => console.log(`  → ${q}`));
-    return [];
+  console.log(`\n🎯 Finding ${count} leads using browser automation...\n`);
+
+  // Ensure profile directory exists
+  if (!fs.existsSync(USER_DATA_DIR)) {
+    fs.mkdirSync(USER_DATA_DIR, { recursive: true });
   }
 
-  const client = new TwitterApi(config.twitter.bearerToken);
-  const leads = getLeads();
-  const newLeads = [];
+  let browser;
+  try {
+    browser = await puppeteer.launch({
+      headless: false, // Show browser so user can see/intervene
+      userDataDir: USER_DATA_DIR,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-blink-features=AutomationControlled',
+        '--window-size=1280,800',
+      ],
+      defaultViewport: null,
+    });
 
-  // Select queries based on niche
-  let queries = SEARCH_QUERIES;
-  if (niche && NICHE_QUERIES[niche]) {
-    queries = NICHE_QUERIES[niche];
-    console.log(`🎯 Searching ${niche} niche...\n`);
-  }
+    const page = await browser.newPage();
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-  // Shuffle and pick queries
-  const shuffled = queries.sort(() => Math.random() - 0.5);
-  const queriesToRun = shuffled.slice(0, Math.min(5, shuffled.length));
+    // Check if logged in
+    console.log('📱 Checking Twitter login...');
+    await page.goto('https://twitter.com/home', { waitUntil: 'networkidle2', timeout: 30000 });
 
-  for (const query of queriesToRun) {
-    if (newLeads.length >= count) break;
+    const url = page.url();
+    if (url.includes('login') || url.includes('i/flow')) {
+      console.log('\n❌ Not logged in to Twitter/X');
+      console.log('👉 Please log in via the Control Panel first (click "Login to X")');
+      console.log('   Then try finding leads again.\n');
+      await browser.close();
+      return [];
+    }
 
-    try {
+    console.log('✅ Logged in!\n');
+
+    // Select queries
+    let queries = SEARCH_QUERIES;
+    if (niche && NICHE_QUERIES[niche]) {
+      queries = NICHE_QUERIES[niche];
+      console.log(`🎯 Searching ${niche} niche...\n`);
+    }
+
+    const leads = getLeads();
+    const newLeads = [];
+    const existingUsernames = [...leads.found, ...leads.contacted, ...leads.converted].map(l => l.username?.toLowerCase());
+
+    // Search each query
+    for (const query of queries.slice(0, 3)) {
+      if (newLeads.length >= count) break;
+
       console.log(`🔍 Searching: "${query}"`);
 
-      const results = await client.v2.search(query, {
-        max_results: Math.min(20, count - newLeads.length + 5),
-        'tweet.fields': ['author_id', 'created_at', 'public_metrics'],
-        'user.fields': ['username', 'name', 'description', 'public_metrics', 'url'],
-        expansions: ['author_id'],
-      });
+      try {
+        const searchUrl = `https://twitter.com/search?q=${encodeURIComponent(query)}&src=typed_query&f=live`;
+        await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 30000 });
 
-      if (!results.data?.data) {
-        console.log('   No results');
-        continue;
-      }
+        // Wait for tweets to load
+        await page.waitForSelector('[data-testid="tweet"]', { timeout: 10000 }).catch(() => null);
 
-      const users = results.includes?.users || [];
+        // Scroll a bit to load more
+        await page.evaluate(() => window.scrollBy(0, 500));
+        await new Promise(r => setTimeout(r, 2000));
 
-      for (const tweet of results.data.data) {
-        if (newLeads.length >= count) break;
+        // Extract usernames from tweets
+        const foundUsers = await page.evaluate(() => {
+          const tweets = document.querySelectorAll('[data-testid="tweet"]');
+          const users = [];
 
-        const user = users.find(u => u.id === tweet.author_id);
-        if (!user) continue;
+          tweets.forEach(tweet => {
+            try {
+              // Get username from the tweet
+              const userLink = tweet.querySelector('a[href^="/"][role="link"]');
+              if (userLink) {
+                const href = userLink.getAttribute('href');
+                const username = href.replace('/', '').split('/')[0];
+                if (username && username.length > 0 && !username.includes('search') && !username.includes('hashtag')) {
+                  // Try to get follower count
+                  const nameElement = tweet.querySelector('[data-testid="User-Name"]');
+                  users.push({
+                    username: username,
+                    displayName: nameElement?.textContent?.split('@')[0]?.trim() || username,
+                  });
+                }
+              }
+            } catch (e) {
+              // Skip errors
+            }
+          });
 
-        // Skip if already found
-        const existingIds = [...leads.found, ...leads.contacted, ...leads.converted].map(l => l.id);
-        if (existingIds.includes(user.id)) continue;
+          // Remove duplicates
+          return users.filter((u, i, arr) => arr.findIndex(x => x.username === u.username) === i);
+        });
 
-        // Skip very large accounts (unlikely to switch) or very small (not worth it)
-        const followers = user.public_metrics?.followers_count || 0;
-        if (followers > 100000 || followers < 100) continue;
+        // Process found users
+        for (const user of foundUsers) {
+          if (newLeads.length >= count) break;
+          if (existingUsernames.includes(user.username.toLowerCase())) continue;
 
-        // Determine lead type
-        let leadType = 'creator_generic';
-        const bio = (user.description || '').toLowerCase();
-        const tweetText = tweet.text.toLowerCase();
+          const lead = {
+            id: Date.now() + Math.random(),
+            username: user.username,
+            name: user.displayName,
+            followers: 'Unknown',
+            foundVia: query,
+            leadType: 'creator_generic',
+            foundAt: new Date().toISOString(),
+            profileUrl: `https://twitter.com/${user.username}`,
+          };
 
-        if (bio.includes('linktr.ee') || bio.includes('linktree')) {
-          leadType = 'linktree_user';
-        } else if (tweetText.includes('expensive') || tweetText.includes('frustrated') || tweetText.includes('hate')) {
-          leadType = 'complainer';
-        } else if (followers < 5000) {
-          leadType = 'small_follower';
+          newLeads.push(lead);
+          existingUsernames.push(user.username.toLowerCase());
+          console.log(`   ✓ Found: @${user.username}`);
         }
 
-        const lead = {
-          id: user.id,
-          username: user.username,
-          name: user.name,
-          bio: user.description,
-          followers: followers,
-          following: user.public_metrics?.following_count || 0,
-          tweets: user.public_metrics?.tweet_count || 0,
-          url: user.url || null,
-          foundVia: query,
-          tweetThatFoundThem: tweet.text.substring(0, 100),
-          leadType: leadType,
-          suggestedMessage: MESSAGE_TEMPLATES[leadType],
-          foundAt: new Date().toISOString(),
-          profileUrl: `https://twitter.com/${user.username}`,
-        };
+        // Delay between searches
+        await new Promise(r => setTimeout(r, 3000));
 
-        newLeads.push(lead);
-        console.log(`   ✓ Found: @${user.username} (${followers} followers) - ${leadType}`);
+      } catch (error) {
+        console.log(`   ⚠️ Error searching: ${error.message}`);
       }
-
-      // Rate limit protection
-      await new Promise(r => setTimeout(r, 1000));
-
-    } catch (error) {
-      console.log(`   ❌ Error: ${error.message}`);
     }
+
+    await browser.close();
+
+    // Save leads
+    if (newLeads.length > 0) {
+      leads.found.push(...newLeads);
+      saveLeads(leads);
+      console.log(`\n✅ Found ${newLeads.length} new leads!`);
+      console.log(`📁 Saved to: ${leadsFile}\n`);
+    } else {
+      console.log('\n⚠️ No new leads found. Try different search terms.\n');
+    }
+
+    return newLeads;
+
+  } catch (error) {
+    console.error('❌ Error:', error.message);
+    if (browser) await browser.close();
+    return [];
   }
-
-  // Save new leads
-  leads.found.push(...newLeads);
-  saveLeads(leads);
-
-  return newLeads;
-}
-
-function generateOutreachList(leads) {
-  console.log(`
-╔══════════════════════════════════════════════════════════════════╗
-║                    TODAY'S OUTREACH LIST                          ║
-║                    ${new Date().toLocaleDateString().padEnd(40)}║
-╚══════════════════════════════════════════════════════════════════╝
-`);
-
-  leads.forEach((lead, i) => {
-    const msg = lead.suggestedMessage;
-    console.log(`
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#${i + 1} @${lead.username} (${lead.followers.toLocaleString()} followers)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Profile: ${lead.profileUrl}
-Bio: ${(lead.bio || 'No bio').substring(0, 80)}...
-Type: ${lead.leadType}
-
-📝 SUGGESTED DM:
-"${msg.opener}
-
-${msg.pitch}
-
-${msg.cta}"
-`);
-  });
-
-  console.log(`
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Total leads: ${leads.length}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-💡 TIP: Personalize each message! Reference their bio or recent content.
-`);
-}
-
-function exportToCSV(leads) {
-  if (!fs.existsSync(exportDir)) {
-    fs.mkdirSync(exportDir, { recursive: true });
-  }
-
-  const date = new Date().toISOString().split('T')[0];
-  const filename = path.join(exportDir, `leads-${date}.csv`);
-
-  const headers = ['Username', 'Name', 'Followers', 'Bio', 'Lead Type', 'Profile URL', 'Suggested Opener'];
-  const rows = leads.map(l => [
-    `@${l.username}`,
-    l.name,
-    l.followers,
-    `"${(l.bio || '').replace(/"/g, '""')}"`,
-    l.leadType,
-    l.profileUrl,
-    `"${l.suggestedMessage.opener}"`,
-  ]);
-
-  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-  fs.writeFileSync(filename, csv);
-
-  console.log(`\n📁 Exported to: ${filename}`);
-  return filename;
 }
 
 function showStats() {
@@ -304,100 +213,25 @@ Conversion: ${leads.contacted.length > 0 ? ((leads.converted.length / leads.cont
 `);
 }
 
-function markContacted(username) {
-  const leads = getLeads();
-  const index = leads.found.findIndex(l => l.username.toLowerCase() === username.toLowerCase());
-  if (index !== -1) {
-    const lead = leads.found.splice(index, 1)[0];
-    lead.contactedAt = new Date().toISOString();
-    leads.contacted.push(lead);
-    saveLeads(leads);
-    console.log(`✓ Marked @${username} as contacted`);
-  } else {
-    console.log(`❌ Lead @${username} not found`);
-  }
-}
-
-function markConverted(username) {
-  const leads = getLeads();
-  const index = leads.contacted.findIndex(l => l.username.toLowerCase() === username.toLowerCase());
-  if (index !== -1) {
-    const lead = leads.contacted.splice(index, 1)[0];
-    lead.convertedAt = new Date().toISOString();
-    leads.converted.push(lead);
-    saveLeads(leads);
-    console.log(`🎉 Marked @${username} as converted!`);
-  } else {
-    console.log(`❌ Lead @${username} not found in contacted list`);
-  }
-}
-
 // CLI
 async function main() {
   const args = process.argv.slice(2);
-
-  if (args.includes('--help')) {
-    console.log(`
-Lead Finder - Find creators who need LinkHub
-
-Usage:
-  node lead-finder.js [options]
-
-Options:
-  --count N        Find N leads (default: 20)
-  --niche NAME     Focus on niche: fitness, art, music, business, coaching, ecommerce
-  --export         Export to CSV
-  --stats          Show lead statistics
-  --contacted @username    Mark lead as contacted
-  --converted @username    Mark lead as converted
-
-Examples:
-  node lead-finder.js --count 50
-  node lead-finder.js --niche fitness
-  node lead-finder.js --contacted johndoe
-`);
-    return;
-  }
 
   if (args.includes('--stats')) {
     showStats();
     return;
   }
 
-  const contactedIndex = args.indexOf('--contacted');
-  if (contactedIndex !== -1 && args[contactedIndex + 1]) {
-    markContacted(args[contactedIndex + 1].replace('@', ''));
-    return;
-  }
-
-  const convertedIndex = args.indexOf('--converted');
-  if (convertedIndex !== -1 && args[convertedIndex + 1]) {
-    markConverted(args[convertedIndex + 1].replace('@', ''));
-    return;
-  }
-
-  // Find leads
   const countIndex = args.indexOf('--count');
   const count = countIndex !== -1 ? parseInt(args[countIndex + 1]) || 20 : 20;
 
   const nicheIndex = args.indexOf('--niche');
   const niche = nicheIndex !== -1 ? args[nicheIndex + 1] : null;
 
-  console.log(`\n🎯 Finding ${count} leads...\n`);
-  const leads = await findLeads({ count, niche });
-
-  if (leads.length > 0) {
-    generateOutreachList(leads);
-
-    if (args.includes('--export')) {
-      exportToCSV(leads);
-    }
-  } else {
-    console.log('\nNo new leads found. Try different search terms or check API config.');
-  }
+  await findLeads({ count, niche });
 }
 
-module.exports = { findLeads, generateOutreachList, exportToCSV, markContacted, markConverted };
+module.exports = { findLeads, getLeads, saveLeads };
 
 if (require.main === module) {
   main();
