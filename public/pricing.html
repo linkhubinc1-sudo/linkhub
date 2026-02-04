@@ -153,7 +153,12 @@
       <p>Start free, upgrade when you're ready to grow</p>
     </div>
 
-    <div class="pricing-grid">
+    <!-- Urgency Banner -->
+    <div style="background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white; padding: 1rem; border-radius: 0.5rem; text-align: center; margin-bottom: 2rem; font-weight: 600;">
+      🔥 LIMITED: Lifetime deal available - Pay once, use forever. Only 47 spots left.
+    </div>
+
+    <div class="pricing-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
       <!-- Free Plan -->
       <div class="pricing-card">
         <div class="plan-name">Free</div>
@@ -162,7 +167,7 @@
 
         <ul class="plan-features">
           <li>Unlimited links</li>
-          <li>Basic analytics</li>
+          <li>Basic analytics (7 days)</li>
           <li>5 color themes</li>
           <li>Mobile-responsive page</li>
           <li class="disabled">Custom domain</li>
@@ -177,15 +182,15 @@
       <div class="pricing-card featured">
         <div class="plan-name">Pro</div>
         <div class="plan-price">$5 <span>/month</span></div>
-        <p class="plan-description">For creators who want more</p>
+        <p class="plan-description">For serious creators</p>
 
         <ul class="plan-features">
           <li>Everything in Free</li>
           <li>Custom domain support</li>
           <li>Remove LinkHub branding</li>
-          <li>Advanced analytics</li>
+          <li>Advanced analytics (forever)</li>
           <li>20+ premium themes</li>
-          <li>Social media embeds</li>
+          <li>Email capture widget</li>
           <li>Priority support</li>
         </ul>
 
@@ -194,6 +199,34 @@
           or <a href="#" onclick="upgradeToPro('yearly'); return false;">$48/year (save 20%)</a>
         </p>
       </div>
+
+      <!-- Lifetime Plan -->
+      <div class="pricing-card" style="border-color: #ffa500;">
+        <div style="background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white; padding: 0.25rem 1rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-bottom: 0.5rem;">Best Value</div>
+        <div class="plan-name">Lifetime</div>
+        <div class="plan-price">$49 <span>one-time</span></div>
+        <p class="plan-description">Pay once, own forever</p>
+
+        <ul class="plan-features">
+          <li>Everything in Pro</li>
+          <li>Lifetime access (no renewals)</li>
+          <li>All future updates included</li>
+          <li>VIP support forever</li>
+          <li>Early access to new features</li>
+          <li>Founder badge on profile</li>
+        </ul>
+
+        <button class="btn btn-primary" style="background: linear-gradient(135deg, #ff6b6b, #ffa500);" onclick="upgradeToPro('lifetime')">Get Lifetime Access</button>
+        <p style="text-align: center; margin-top: 0.75rem; color: var(--text-muted); font-size: 0.875rem;">
+          <s>$99</s> → $49 (50% off)
+        </p>
+      </div>
+    </div>
+
+    <!-- Social Proof -->
+    <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-card); border-radius: 0.5rem; border: 1px solid var(--border);">
+      <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Trusted by 2,500+ creators</p>
+      <p style="color: var(--text-muted);">"Finally ditched Linktree. LinkHub does everything I need for free." - @sarahcreates</p>
     </div>
 
     <div class="faq">

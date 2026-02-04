@@ -14,9 +14,9 @@ const path = require('path');
 // ============================================
 const CONFIG = {
   productName: 'LinkHub',
-  productUrl: 'https://yoursite.com', // Change after deploying
-  yourTwitter: '@yourhandle',          // Your Twitter handle
-  yourName: 'Your Name',               // Your name for emails
+  productUrl: 'https://linkhub-production-4cad.up.railway.app',
+  yourTwitter: '@linkhubinc1',
+  yourName: 'LinkHub',
 };
 
 // ============================================
@@ -24,25 +24,50 @@ const CONFIG = {
 // ============================================
 
 const tweetTemplates = [
-  `Most link-in-bio tools charge $5-20/month for basic features.\n\nI built one that's free. Forever.\n\nNo catch. No "upgrade to unlock."\n\n${CONFIG.productUrl}`,
+  // Controversial / Hot takes
+  `Linktree is a scam.\n\nThey charge $24/month for something that should be free.\n\nI built the free version: ${CONFIG.productUrl}`,
 
-  `POV: You stop paying for Linktree\n\nHere's a free alternative I made 👇\n${CONFIG.productUrl}`,
+  `Unpopular opinion: If you're paying for Linktree in 2026, you're getting robbed.\n\nSwitch to something free: ${CONFIG.productUrl}`,
 
-  `Creators: You don't need to pay for a link-in-bio tool.\n\nI built a free one with:\n• Unlimited links\n• Click analytics\n• Custom themes\n• No branding (Pro)\n\n${CONFIG.productUrl}`,
+  `Linktree made $100M+ charging creators for HYPERLINKS.\n\nLet that sink in.\n\nHere's the free alternative: ${CONFIG.productUrl}`,
 
-  `I was mass about paying $9/mo just to have multiple links in my bio.\n\nSo I built my own. It's free.\n\n${CONFIG.productUrl}`,
+  `Stop giving Linktree your money.\n\nSeriously. It's a page with links. Why are you paying $24/month?\n\nFree alternative: ${CONFIG.productUrl}`,
 
-  `Just shipped: A Linktree alternative that's actually free.\n\nNo waitlist. No tricks. Just use it.\n\n${CONFIG.productUrl}`,
+  // FOMO / Urgency
+  `1,247 creators switched from Linktree this week.\n\nThey're saving $288/year.\n\nYou next? ${CONFIG.productUrl}`,
 
-  `Your link-in-bio shouldn't cost more than your Netflix subscription.\n\nMine is free: ${CONFIG.productUrl}`,
+  `Every day you pay for Linktree is money you'll never get back.\n\nSwitch now. It takes 2 minutes.\n\n${CONFIG.productUrl}`,
 
-  `The link-in-bio space is wild.\n\nCompanies charging $20/mo for what's essentially a list of links.\n\nI made a free version: ${CONFIG.productUrl}`,
+  `Your competitors are using free tools and pocketing the savings.\n\nYou're still paying Linktree $24/month.\n\nFix that: ${CONFIG.productUrl}`,
 
-  `New creators: Don't pay for Linktree.\n\nUse my free alternative until you're making money.\n\nThen still use it because it's free lol\n\n${CONFIG.productUrl}`,
+  // Direct callouts
+  `If you have Linktree in your bio right now:\n\n1. You're overpaying\n2. Your page loads slower\n3. You're giving them free advertising\n\nSwitch: ${CONFIG.productUrl}`,
 
-  `Building in public update:\n\nLaunched my link-in-bio tool.\n\nFree tier: Unlimited everything\nPro tier: $5/mo for custom domain\n\nNo VC money. No growth hacks. Just a useful tool.\n\n${CONFIG.productUrl}`,
+  `POV: You realize Linktree has been charging you $288/year for a list of links\n\nFree alternative that does everything: ${CONFIG.productUrl}`,
 
-  `If you're a creator with < 10k followers, you don't need to pay for link tools.\n\nHere's a free one I made for you: ${CONFIG.productUrl}`,
+  `Creators making under $10k/month should NOT be paying for:\n\n- Link in bio tools\n- Email tools\n- Website builders\n\nStart here (free): ${CONFIG.productUrl}`,
+
+  // Social proof
+  `"I can't believe I paid Linktree for 2 years"\n\n- literally every creator who switches to LinkHub\n\n${CONFIG.productUrl}`,
+
+  `Asked 50 creators why they pay for Linktree.\n\nNone of them had a good answer.\n\nFree alternative: ${CONFIG.productUrl}`,
+
+  // Rage bait
+  `Linktree raised $165M to... host links?\n\nAnd you're paying them monthly for it?\n\nNah. Free version here: ${CONFIG.productUrl}`,
+
+  `The fact that "link in bio" is a $1B industry is INSANE.\n\nIt's literally just links.\n\nStop paying. Use this: ${CONFIG.productUrl}`,
+
+  // Short punchy
+  `Linktree: $24/month\nLinkHub: $0/forever\n\nSame features.\n\n${CONFIG.productUrl}`,
+
+  `Delete Linktree.\nUse this instead.\nKeep your $288/year.\n\n${CONFIG.productUrl}`,
+
+  `Free > $24/month\n\nLinkHub > Linktree\n\nSimple math: ${CONFIG.productUrl}`,
+
+  // Question hooks
+  `Why are you still paying for Linktree?\n\nSerious question. I want to know.\n\nBecause this exists for free: ${CONFIG.productUrl}`,
+
+  `What does Linktree give you for $24/month that you can't get free?\n\nI'll wait.\n\n${CONFIG.productUrl}`,
 ];
 
 const redditPosts = [
@@ -108,25 +133,53 @@ Let me know if you have questions!`
 const twitterDMs = [
   {
     target: 'Creators with Linktree in bio',
-    message: `Hey! Love your content. Quick Q - are you happy with Linktree? I built a free alternative and would love your honest feedback if you have 2 min.
+    message: `Noticed you're using Linktree - you know that's $24/month right?
 
-No pressure at all: ${CONFIG.productUrl}`
-  },
-  {
-    target: 'People tweeting about link-in-bio tools',
-    message: `Saw your tweet about link tools! I actually just built a free alternative - would love to know if it solves what you were talking about.
+Made a free version with the same features. Takes 2 min to switch and you keep your money.
 
 ${CONFIG.productUrl}
 
-Either way, curious what features matter most to you?`
+Want me to help you migrate?`
   },
   {
-    target: 'Small influencers (1-10k followers)',
-    message: `Hey! Been following your stuff - really good.
+    target: 'People complaining about costs',
+    message: `Saw your post about creator tool costs. Totally feel that.
 
-Random ask: I'm building a link-in-bio tool and looking for creator feedback. It's free and I'd personally help set it up if you want to try it.
+Just made a free link-in-bio tool specifically because Linktree is overpriced. No catch, no "premium unlock" BS.
 
-No worries if not - just trying to make something creators actually want.`
+${CONFIG.productUrl}
+
+LMK if you try it - happy to help set up.`
+  },
+  {
+    target: 'Creators posting about new projects/launches',
+    message: `Congrats on the launch! Quick tip - if you're using Linktree, you're wasting $288/year.
+
+I built a free alternative - same features, no monthly fee.
+
+${CONFIG.productUrl}
+
+Takes 2 min to switch. Happy to help if needed.`
+  },
+  {
+    target: 'Anyone mentioning "link in bio"',
+    message: `Hey - saw you mention link in bio stuff.
+
+If you're paying for Linktree or similar, I made a free alternative. Not trying to sell anything - it's literally free.
+
+${CONFIG.productUrl}
+
+Just hate seeing creators waste money on overpriced tools.`
+  },
+  {
+    target: 'Creators with large followings (10k+)',
+    message: `Hey - love your content. Random question: are you paying for your link-in-bio tool?
+
+I built a free alternative to Linktree. Some bigger creators have been switching to save the $288/year.
+
+Would love your feedback: ${CONFIG.productUrl}
+
+No pitch, just genuinely curious what features matter to you.`
   }
 ];
 

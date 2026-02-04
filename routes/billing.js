@@ -13,6 +13,7 @@ if (process.env.STRIPE_SECRET_KEY) {
 const PRICES = {
   pro_monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_xxx', // $5/month
   pro_yearly: process.env.STRIPE_PRICE_PRO_YEARLY || 'price_xxx',   // $48/year (save 20%)
+  lifetime: process.env.STRIPE_PRICE_LIFETIME || 'price_xxx',       // $49 one-time
 };
 
 // Get billing status
@@ -21,13 +22,16 @@ router.get('/status', authenticateToken, (req, res) => {
     'SELECT plan, plan_expires_at, stripe_subscription_id FROM users WHERE id = ?'
   ).get(req.user.id);
 
-  const isPro = user.plan === 'pro' &&
-    (!user.plan_expires_at || new Date(user.plan_expires_at) > new Date());
+  // Lifetime never expires
+  const isLifetime = user.plan === 'lifetime';
+  const isPro = isLifetime || (user.plan === 'pro' &&
+    (!user.plan_expires_at || new Date(user.plan_expires_at) > new Date()));
 
   res.json({
-    plan: isPro ? 'pro' : 'free',
-    expiresAt: user.plan_expires_at,
-    hasSubscription: !!user.stripe_subscription_id
+    plan: isLifetime ? 'lifetime' : (isPro ? 'pro' : 'free'),
+    expiresAt: isLifetime ? null : user.plan_expires_at,
+    hasSubscription: !!user.stripe_subscription_id,
+    isLifetime
   });
 });
 
@@ -55,18 +59,29 @@ router.post('/checkout', authenticateToken, async (req, res) => {
         .run(customerId, user.id);
     }
 
+    // Determine price and mode based on priceType
+    const isLifetime = priceType === 'lifetime';
+    let priceId;
+    if (priceType === 'yearly') {
+      priceId = PRICES.pro_yearly;
+    } else if (priceType === 'lifetime') {
+      priceId = PRICES.lifetime;
+    } else {
+      priceId = PRICES.pro_monthly;
+    }
+
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
       line_items: [{
-        price: priceType === 'yearly' ? PRICES.pro_yearly : PRICES.pro_monthly,
+        price: priceId,
         quantity: 1,
       }],
-      mode: 'subscription',
+      mode: isLifetime ? 'payment' : 'subscription',
       success_url: `${process.env.APP_URL || 'http://localhost:3000'}/dashboard?upgraded=true`,
       cancel_url: `${process.env.APP_URL || 'http://localhost:3000'}/pricing`,
-      metadata: { userId: user.id.toString() }
+      metadata: { userId: user.id.toString(), priceType }
     });
 
     res.json({ url: session.url });
@@ -129,13 +144,26 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     case 'checkout.session.completed': {
       const session = event.data.object;
       const userId = session.metadata?.userId;
+      const priceType = session.metadata?.priceType;
+
       if (userId) {
-        db.prepare(`
-          UPDATE users
-          SET plan = 'pro', stripe_subscription_id = ?
-          WHERE id = ?
-        `).run(session.subscription, userId);
-        console.log(`User ${userId} upgraded to Pro!`);
+        if (priceType === 'lifetime') {
+          // Lifetime purchase - no subscription, never expires
+          db.prepare(`
+            UPDATE users
+            SET plan = 'lifetime', stripe_subscription_id = NULL, plan_expires_at = NULL
+            WHERE id = ?
+          `).run(userId);
+          console.log(`User ${userId} purchased LIFETIME!`);
+        } else {
+          // Subscription purchase
+          db.prepare(`
+            UPDATE users
+            SET plan = 'pro', stripe_subscription_id = ?
+            WHERE id = ?
+          `).run(session.subscription, userId);
+          console.log(`User ${userId} upgraded to Pro!`);
+        }
       }
       break;
     }
